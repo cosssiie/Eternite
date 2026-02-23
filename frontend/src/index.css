@@ -1,29 +1,111 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Viaoda+Libre&display=swap');
+@import './styles/Fonts.css';
+@import './styles/VerticalMarquee.css';
+@import './styles/Header.css';
 
-@font-face {
-  font-family: 'EthicNew';
-  src: url('./assets/fonts/EthicNew-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'TerminaTest';
-  src: url('./assets/fonts/TerminaTest-Regular.otf') format('opentype'); 
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'TerminaTest';
-  src: url('./assets/fonts/TerminaTest-Light.otf') format('opentype'); 
-  font-weight: 300;
-  font-style: normal;
+html {
+  margin: 0;
+  padding: 0;
 }
 
 :root {
+  --main-black-color: #221F1D;
+  --main-white-color: #FFFDF9;
+
+  --font-logo: 'Viaoda Libre', serif;
+  --font-headings: 'EthicNew', serif;
+  --font-buttons: 'TerminaTest', sans-serif;
+  --font-text: 'Archivo', sans-serif;
+
+  --size-logo: 3rem;
+  --size-h1: 8rem;
+  --size-h2: 4rem;
+  --size-h3: 2rem;
+  --size-nav: 1.5rem;
+  --size-buttons: 1rem;
+  --size-body: 1.125rem;
+  --size-small: 0.75rem;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-med: 500;
+
+  --lh-tight: 1;
+  --lh-normal: 1.4;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#logo {
+  font-family: var(--font-logo);
+  line-height: var(--lh-tight);
+  font-size: var(--size-logo);
+  color: var(--main-black-color);
+}
+
+h1 {
+  font-family: var(--font-headings);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-tight);
+  font-size: var(--size-h1);
+  padding-bottom: 24px;
+  padding-top: 24px;
+  margin: 0;
+}
+
+h2 {
+  font-family: var(--font-headings);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-tight);
+  font-size: var(--size-h2);
+  padding-bottom: 16px;
+  padding-top: 16px;
+  margin: 0;
+}
+
+h3 {
+  font-family: var(--font-headings);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-tight);
+  font-size: var(--size-h3);
+  padding-bottom: 8px;
+  padding-top: 8px;
+  margin: 0;
+}
+
+#nav {
+  font-family: var(--font-buttons);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-normal);
+  font-size: var(--size-nav);
+}
+
+#nav-selected {
+  font-family: var(--font-buttons);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  font-size: var(--size-nav);
+}
+
+#button {
+  font-family: var(--font-buttons);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  font-size: var(--size-buttons);
+}
+
+#text {
+  font-family: var(--font-text);
+  font-weight: var(--fw-med);
+  line-height: var(--lh-normal);
+  font-size: var(--size-body);
+}
+
+#text-smallest {
+  font-family: var(--font-text);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-tight);
+  font-size: var(--size-small);
 }
