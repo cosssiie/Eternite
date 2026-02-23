@@ -1,0 +1,52 @@
+.header {
+    background-color: var(--main-white-color);
+    position: fixed;
+    top: 0;
+    left: 2.25rem;
+    width: calc(100% - 2.25rem);
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 40px;
+    margin: 0;
+    box-sizing: border-box;
+    border-bottom: 0.5px solid var(--main-black-color);
+    z-index: 1100;
+}
+
+.account-buttons {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.sign-in-button,
+.sign-up-button {
+    padding: 0.625rem 1rem;
+    border: 0.5px solid var(--main-black-color);
+    cursor: pointer;
+}
+
+.sign-in-button {
+    background-color: var(--main-white-color);
+    color: var(--main-black-color);
+}
+
+.sign-up-button {
+    background-color: var(--main-black-color);
+    color: var(--main-white-color);
+}
+
+.sign-in-button:hover,
+.sign-up-button:hover {
+    transform: translateY(-1px);
+
+}
+
+.sign-in-button:active,
+.sign-up-button:active {
+    transform: translateY(0);
+}
