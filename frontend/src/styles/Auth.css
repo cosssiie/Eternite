@@ -1,0 +1,14 @@
+.signin-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.signin-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    left: 2.25rem;
+    width: calc(100% - 2.25rem);
+    box-sizing: border-box;
+    background-color: blue;
+}
