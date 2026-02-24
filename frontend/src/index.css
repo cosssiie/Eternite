@@ -1,10 +1,22 @@
 @import './styles/Fonts.css';
 @import './styles/VerticalMarquee.css';
 @import './styles/Header.css';
+@import './styles/App.css';
+@import './styles/Auth.css';
+@import './styles/TitleHeader.css';
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html {
   margin: 0;
   padding: 0;
+  font-size: 16px;
+  background-color: var(--main-white-color);
 }
 
 :root {
@@ -17,7 +29,7 @@ html {
   --font-text: 'Archivo', sans-serif;
 
   --size-logo: 3rem;
-  --size-h1: 8rem;
+  --size-h1: 6rem;
   --size-h2: 4rem;
   --size-h3: 2rem;
   --size-nav: 1.5rem;
@@ -45,14 +57,22 @@ html {
   color: var(--main-black-color);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
 h1 {
   font-family: var(--font-headings);
   font-weight: var(--fw-regular);
   line-height: var(--lh-tight);
   font-size: var(--size-h1);
-  padding-bottom: 24px;
-  padding-top: 24px;
-  margin: 0;
+  padding: 1.5rem 2.5rem;
 }
 
 h2 {
@@ -62,7 +82,6 @@ h2 {
   font-size: var(--size-h2);
   padding-bottom: 16px;
   padding-top: 16px;
-  margin: 0;
 }
 
 h3 {
@@ -72,7 +91,6 @@ h3 {
   font-size: var(--size-h3);
   padding-bottom: 8px;
   padding-top: 8px;
-  margin: 0;
 }
 
 #nav {

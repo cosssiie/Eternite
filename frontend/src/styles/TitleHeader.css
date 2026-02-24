@@ -1,0 +1,15 @@
+.title-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    left: 2.25rem;
+    width: calc(100% - 2.25rem);
+    border-bottom: 0.5px solid var(--main-black-color);
+    box-sizing: border-box;
+}
+
+.title {
+    margin: 0;
+    grid-column: 1;
+    border-right: 0.5px solid var(--main-black-color);
+    text-transform: capitalize;
+}
