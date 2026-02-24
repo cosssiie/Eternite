@@ -1,0 +1,31 @@
+.vertical-marquee-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 100vh;
+    background-color: var(--main-black-color);
+    color: var(--main-white-color);
+    overflow: hidden;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+}
+
+.marquee-track {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+}
+
+.marquee-item {
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    font-weight: var(--fw-light);
+    padding-bottom: 1.125rem;
+}

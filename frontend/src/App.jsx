@@ -4,11 +4,13 @@ import Header from "./components/Header";
 import MainPage from "./pages/MainPage";
 import SignIn from "./pages/SignInPage";
 import SignUp from "./pages/SignUpPage";
+import VerticalMarquee from "./components/VerticalMarquee";
 
 function App() {
   return (
     <Router>
       <div className="app-layout">
+        <VerticalMarquee text='Join The Eternite' speed={1}/>
         <Header />
         <main className="page-content">
           <Routes>
