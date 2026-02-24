@@ -1,14 +1,81 @@
-.signin-page-container {
+.auth-page-container {
     width: 100%;
     display: flex;
     flex-direction: column;
+    min-height: calc(100vh - 5rem);
 }
 
-.signin-container {
+.auth-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    left: 2.25rem;
-    width: calc(100% - 2.25rem);
-    box-sizing: border-box;
-    background-color: blue;
+    grid-template-columns: 33% 1fr 1fr;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.auth-form {
+    grid-column: 2 / 4;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: max-content;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem 1rem;
+    border-bottom: 0.5px solid var(--main-black-color);
+}
+
+.form-group input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    color: var(--main-black-color);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 6rem;
+    align-self: center;
+    width: fit-content;
+    gap: 12.5rem;
+}
+
+.submit-button,
+.cancel-button {
+    padding: 1rem 1.5rem;
+    border: 0.5px solid var(--main-black-color);
+    cursor: pointer;
+}
+
+.submit-button {
+    background-color: var(--main-black-color);
+    color: var(--main-white-color);
+}
+
+.cancel-button {
+    background-color: var(--main-white-color);
+    color: var(--main-black-color);
+}
+
+.submit-button:hover,
+.cancel-button:hover {
+    transform: translateY(-1px);
+}
+
+.submit-button:active,
+.cancel-button:active {
+    transform: translateY(0);
+}
+
+@media (min-width: 350px) and (max-width: 800px) {
+    .action-buttons {
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+    }
 }
