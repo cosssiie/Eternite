@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <div className="app-layout">
-        <VerticalMarquee text='Join The Eternite' speed={1}/>
+        <VerticalMarquee text='Join the Eternite' speed={1} />
         <Header />
         <main className="page-content">
           <Routes>

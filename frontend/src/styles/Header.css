@@ -24,7 +24,7 @@
     grid-column: 3;
     display: flex;
     gap: 1rem;
-    justify-self: end; 
+    justify-self: end;
     align-items: center;
 }
 

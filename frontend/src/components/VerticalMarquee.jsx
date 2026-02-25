@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 
-const VerticalMarquee = ({ text = "Join the Eternite", speed = 1 }) => {
+const VerticalMarquee = ({ text, speed }) => {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   const posRef = useRef(0);
