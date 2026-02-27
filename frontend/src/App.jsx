@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import MainPage from "./pages/MainPage";
 import SignIn from "./pages/SignInPage";
@@ -7,20 +6,21 @@ import SignUp from "./pages/SignUpPage";
 import VerticalMarquee from "./components/VerticalMarquee";
 
 function App() {
+  const location = useLocation();
+  const isMainPage = location.pathname === "/";
+
   return (
-    <Router>
-      <div className="app-layout">
-        <VerticalMarquee text='Join the Eternite' speed={1} />
-        <Header />
-        <main className="page-content">
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <div className="app-layout">
+      <VerticalMarquee text='Join the Eternite' speed={1} />
+      <Header />
+      <main className={`page-content ${isMainPage ? "no-margin" : ""}`}>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
