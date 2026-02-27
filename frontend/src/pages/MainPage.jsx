@@ -15,7 +15,7 @@ function MainPage() {
       </div>
 
       <div className="about-container">
-        <h1>Hello</h1>
+        <h1> </h1>
       </div>
     </div>
   );
