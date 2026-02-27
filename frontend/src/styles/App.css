@@ -7,4 +7,9 @@
 .page-content {
     margin-top: 5rem;
     margin-left: 2.25rem;
+    transition: margin-top 0.3s ease;
+}
+
+.page-content.no-margin {
+    margin-top: 0;
 }

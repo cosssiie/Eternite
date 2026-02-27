@@ -1,14 +1,27 @@
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 function Header() {
     const location = useLocation();
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const isMainPage = location.pathname === "/";
+    const isSpecialState = isMainPage && !isScrolled;
 
     const hideAuthButtons =
         location.pathname === "/signin" ||
         location.pathname === "/signup";
 
     return (
-        <header className="header">
+        <header className={`header ${isSpecialState ? "special-transparent" : "ordinary"}`}>
             <div id="logo">Éternité</div>
 
             {!hideAuthButtons && (

@@ -55,7 +55,6 @@ html {
   font-family: var(--font-logo);
   line-height: var(--lh-tight);
   font-size: var(--size-logo);
-  color: var(--main-black-color);
 }
 
 h1,
