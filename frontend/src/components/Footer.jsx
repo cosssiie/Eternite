@@ -10,38 +10,48 @@ function Footer() {
 
             <div className="footer-nav-row">
                 <div className="footer-col">
-                    <p className="footer-col-title" id="nav">Navigate</p>
-                    <Link to="/">
-                        <a className="footer-link" id="button">Home</a>
+                    <p className="footer-col-title">Navigate</p>
+                    <Link to="/" className="footer-link" id="button">
+                        Home
                     </Link>
-                    <Link to="/gallery">
-                        <a className="footer-link" id="button">Gallery</a>
+                    <Link to="/gallery" className="footer-link" id="button">
+                        Gallery
                     </Link>
-                    <Link to="/account">
-                        <a className="footer-link" id="button">Account</a>
-                    </Link>
-                </div>
-
-                <div className="footer-col">
-                    <p className="footer-col-title" id="nav">Company</p>
-                    <Link to="/about">
-                        <a className="footer-link" id="button">About</a>
-                    </Link>
-                    <Link to="/faqs">
-                        <a className="footer-link" id="button">FAQs</a>
+                    <Link to="/account" className="footer-link" id="button">
+                        Account
                     </Link>
                 </div>
-
                 <div className="footer-col">
-                    <p className="footer-col-title" id="nav">Contacts</p>
-
+                    <p className="footer-col-title">Company</p>
+                    <Link to="/about" className="footer-link" id="button">
+                        About
+                    </Link>
+                    <Link to="/faqs" className="footer-link" id="button">
+                        FAQs
+                    </Link>
+                </div>
+                <div className="footer-col">
+                    <p className="footer-col-title">Contacts</p>
+                    <div className="footer-contact-items">
+                        <a href="mailto:hello@eternite.com" className="footer-link" id="button">
+                            hello@eternite.com
+                        </a>
+                        <a href="tel:+380000000000" className="footer-link" id="button">
+                            +38 (000) 000-00-00
+                        </a>
+                    </div>
                 </div>
 
                 <div className="footer-socialmedia">
-                    <img src="./src/assets/icons/youtube-icon.svg" alt="youtube" />
-                    <img src="./src/assets/icons/pinterest-icon.svg" alt="pinterest" />
-                    <img src="./src/assets/icons/instagram-icon.svg" alt="instagram" />
-
+                    <button>
+                        <img src="./src/assets/icons/youtube-icon.svg" alt="youtube" />
+                    </button>
+                    <button>
+                        <img src="./src/assets/icons/pinterest-icon.svg" alt="pinterest" />
+                    </button>
+                    <button>
+                        <img src="./src/assets/icons/instagram-icon.svg" alt="instagram" />
+                    </button>
                 </div>
             </div>
 
