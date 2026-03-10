@@ -1,7 +1,7 @@
 {
   "name": "creative-studio",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently \"npm run backend\" \"npm run frontend\"",
