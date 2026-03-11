@@ -22,7 +22,12 @@ function Header() {
 
     return (
         <header className={`header ${isSpecialState ? "special-transparent" : "ordinary"}`}>
-            <div id="logo">Éternité</div>
+            <Link to="/" id="logo" style={{ textDecoration: 'none', color: 'inherit', transition: 'opacity 0.2s ease' }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.6'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >
+                Éternité
+            </Link>
 
             {!hideAuthButtons && (
                 <div className="account-buttons">
