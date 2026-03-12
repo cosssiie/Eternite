@@ -86,6 +86,27 @@ const toggleActive = async (id) => {
     return userRepository.updateById(id, { isActive: !user.isActive });
 };
 
+const toggleFavourite = async (userId, publicationId) => {
+    const user = await userRepository.findById(userId);
+    if (!user) throw new Error('Користувача не знайдено');
+
+    const isFavourite = user.favourites
+        .map(id => id.toString())
+        .includes(publicationId);
+
+    if (isFavourite) {
+        return userRepository.removeFromFavourites(userId, publicationId);
+    } else {
+        return userRepository.addToFavourites(userId, publicationId);
+    }
+};
+
+const getFavourites = async (userId) => {
+    const user = await userRepository.getFavourites(userId);
+    if (!user) throw new Error('Користувача не знайдено');
+    return user.favourites;
+};
+
 // ─── helpers ─────────────────────────────────────────
 
 const sendVerificationEmail = async (email, token) => {
@@ -124,8 +145,10 @@ const sendVerificationEmail = async (email, token) => {
   </div>
 
 </div>
-`,});
+`,
+    });
 };
+
 
 module.exports = {
     register,
@@ -136,4 +159,6 @@ module.exports = {
     update,
     remove,
     toggleActive,
+    toggleFavourite, 
+    getFavourites,   
 };

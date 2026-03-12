@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     isActive: { type: Boolean, default: false },
     verifyToken: { type: String, default: null },
+    favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Publication' }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

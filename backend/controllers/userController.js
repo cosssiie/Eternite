@@ -72,6 +72,24 @@ const toggleActive = async (req, res, next) => {
     }
 };
 
+const toggleFavourite = async (req, res, next) => {
+    try {
+        await userService.toggleFavourite(req.user.id, req.params.publicationId);
+        res.json({ success: true });
+    } catch (err) {
+        next(err);
+    }
+};
+
+const getFavourites = async (req, res, next) => {
+    try {
+        const favourites = await userService.getFavourites(req.user.id);
+        res.json({ success: true, favourites });
+    } catch (err) {
+        next(err);
+    }
+};
+
 module.exports = {
     register,
     login,
@@ -81,4 +99,6 @@ module.exports = {
     updateUser,
     deleteUser,
     toggleActive,
+    toggleFavourite,
+    getFavourites,
 };

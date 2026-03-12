@@ -10,6 +10,8 @@ router.get('/verify/:token', userController.verifyEmail);
 
 // авторизований користувач
 router.get('/me', auth, userController.getMe);
+router.post('/favourites/:publicationId', auth, userController.toggleFavourite);
+router.get('/favourites', auth, userController.getFavourites);
 
 // адмін
 router.get('/', auth, admin, userController.getAll);

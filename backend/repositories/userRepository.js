@@ -15,6 +15,27 @@ const deleteById = (id) => User.findByIdAndDelete(id);
 
 const findByVerifyToken = (token) => User.findOne({ verifyToken: token });
 
+const addToFavourites = (userId, publicationId) =>
+    User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { favourites: publicationId } },
+        { new: true }
+    );
+
+const removeFromFavourites = (userId, publicationId) =>
+    User.findByIdAndUpdate(
+        userId,
+        { $pull: { favourites: publicationId } },
+        { new: true }
+    );
+
+const getFavourites = (userId) =>
+    User.findById(userId)
+        .populate({
+            path: 'favourites',
+            populate: { path: 'category', select: 'name' }
+        });
+
 module.exports = {
     findByEmail,
     findById,
@@ -23,4 +44,7 @@ module.exports = {
     updateById,
     deleteById,
     findByVerifyToken,
+    addToFavourites,
+    removeFromFavourites,
+    getFavourites,
 };
