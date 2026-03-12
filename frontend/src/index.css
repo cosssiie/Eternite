@@ -6,7 +6,9 @@
 @import './styles/Auth.css';
 @import './styles/TitleHeader.css';
 @import './styles/MainPage.css';
-
+@import './styles/About.css';
+@import './styles/AuthModal.css';
+@import './styles/FAQsPage.css';
 
 * {
   margin: 0;
@@ -24,6 +26,7 @@ html {
 :root {
   --main-black-color: #221F1D;
   --main-white-color: #FFFDF9;
+  --grey-color: #777777;
 
   --font-logo: 'Viaoda Libre', serif;
   --font-headings: 'EthicNew', serif;
@@ -111,13 +114,13 @@ h3 {
 #button {
   font-family: var(--font-buttons);
   font-weight: var(--fw-light);
-  line-height: var(--lh-tight);
+  line-height: var(--lh-normal);
   font-size: var(--size-buttons);
 }
 
 #text {
   font-family: var(--font-text);
-  font-weight: var(--fw-med);
+  font-weight: var(--fw-regular);
   line-height: var(--lh-normal);
   font-size: var(--size-body);
 }
