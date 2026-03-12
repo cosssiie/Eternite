@@ -9,6 +9,7 @@
 @import './styles/About.css';
 @import './styles/AuthModal.css';
 @import './styles/FAQsPage.css';
+@import './styles/Gallery.css';
 
 * {
   margin: 0;
