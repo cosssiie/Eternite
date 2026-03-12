@@ -4,13 +4,21 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const userRepository = require('../repositories/userRepository');
 
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
 const register = async ({ name, email, password }) => {
     const existing = await userRepository.findByEmail(email);
-    if (existing) throw new Error('Email вже зайнятий');
+    if (existing) throw new Error('Email is arleady in use');
 
     const hashed = await bcrypt.hash(password, 10);
-
-    // токен для подтверждения email
     const verifyToken = crypto.randomBytes(32).toString('hex');
 
     const user = await userRepository.create({
@@ -21,7 +29,6 @@ const register = async ({ name, email, password }) => {
         isActive: false,
     });
 
-    // отправка письма
     await sendVerificationEmail(email, verifyToken);
 
     return user;
@@ -29,11 +36,11 @@ const register = async ({ name, email, password }) => {
 
 const login = async ({ email, password }) => {
     const user = await userRepository.findByEmail(email);
-    if (!user) throw new Error('Невірний email або пароль');
-    if (!user.isActive) throw new Error('Підтвердіть email перед входом');
+    if (!user) throw new Error('Uncorrect email or password');
+    if (!user.isActive) throw new Error('Confirm your email before Sign in');
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) throw new Error('Невірний email або пароль');
+    if (!match) throw new Error('Uncorrect email or password');
 
     const token = jwt.sign(
         { id: user._id, role: user.role },
@@ -46,7 +53,7 @@ const login = async ({ email, password }) => {
 
 const verifyEmail = async (token) => {
     const user = await userRepository.findByVerifyToken(token);
-    if (!user) throw new Error('Невалідний токен');
+    if (!user) throw new Error('Unvalid token');
 
     await userRepository.updateById(user._id, {
         isActive: true,
@@ -56,7 +63,7 @@ const verifyEmail = async (token) => {
 
 const getById = async (id) => {
     const user = await userRepository.findById(id);
-    if (!user) throw new Error('Користувача не знайдено');
+    if (!user) throw new Error('User is not found');
     return user;
 };
 
@@ -64,18 +71,18 @@ const getAll = () => userRepository.findAll();
 
 const update = async (id, data) => {
     const user = await userRepository.updateById(id, data);
-    if (!user) throw new Error('Користувача не знайдено');
+    if (!user) throw new Error('User is not found');
     return user;
 };
 
 const remove = async (id) => {
     const user = await userRepository.deleteById(id);
-    if (!user) throw new Error('Користувача не знайдено');
+    if (!user) throw new Error('User is not found');
 };
 
 const toggleActive = async (id) => {
     const user = await userRepository.findById(id);
-    if (!user) throw new Error('Користувача не знайдено');
+    if (!user) throw new Error('User is not found');
     return userRepository.updateById(id, { isActive: !user.isActive });
 };
 

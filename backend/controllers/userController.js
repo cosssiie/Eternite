@@ -21,7 +21,7 @@ const login = async (req, res, next) => {
 const verifyEmail = async (req, res, next) => {
     try {
         await userService.verifyEmail(req.params.token);
-        res.json({ success: true, message: 'Email підтверджено' });
+        res.redirect('http://localhost:5173/');
     } catch (err) {
         next(err);
     }
@@ -57,7 +57,7 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     try {
         await userService.remove(req.params.id);
-        res.json({ success: true, message: 'Користувача видалено' });
+        res.json({ success: true, message: 'User is deleted' });
     } catch (err) {
         next(err);
     }

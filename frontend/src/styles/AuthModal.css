@@ -1,0 +1,46 @@
+.auth-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.auth-modal-container {
+    background: var(--main-white-color);
+    color: var(--main-black-color);
+    padding: 1.5rem;
+    text-align: center;
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auth-modal-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.auth-modal-icon.success, .auth-modal-icon.error {
+    background: var(--main-black-color);
+    color: var(--main-white-color);
+}
+
+.auth-modal-button {
+    background: var(--main-black-color);
+    color: var(--main-white-color);
+    border: none;
+    padding: 0.625rem 2rem;
+    cursor: pointer;
+    margin-top: 2.5rem;
+}

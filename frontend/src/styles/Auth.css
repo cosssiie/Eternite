@@ -39,7 +39,7 @@
 .action-buttons {
     display: flex;
     justify-content: space-between;
-    padding-top: 6rem;
+    margin: 6rem 0rem;
     align-self: center;
     width: fit-content;
     gap: 12.5rem;
