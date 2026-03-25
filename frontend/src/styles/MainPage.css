@@ -1,3 +1,7 @@
+#about, #faqs, #video {
+  scroll-margin-top: 5rem; 
+}
+
 .main-page-container {
     width: 100%;
     overflow: hidden;

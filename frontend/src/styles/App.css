@@ -13,7 +13,6 @@
 .page-content {
     margin-top: 5rem;
     width: 100%;
-    transition: margin-top 0.3s ease;
 }
 
 .page-content.no-margin {

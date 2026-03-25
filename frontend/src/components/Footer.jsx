@@ -11,7 +11,7 @@ function Footer() {
             <div className="footer-nav-row">
                 <div className="footer-col">
                     <p className="footer-col-title">Navigate</p>
-                    <Link to="/" className="footer-link" id="button">
+                    <Link to="/#video" className="footer-link" id="button">
                         Home
                     </Link>
                     <Link to="/gallery" className="footer-link" id="button">
@@ -23,10 +23,10 @@ function Footer() {
                 </div>
                 <div className="footer-col">
                     <p className="footer-col-title">Company</p>
-                    <Link to="/about" className="footer-link" id="button">
+                    <Link to="/#about" className="footer-link" id="button">
                         About
                     </Link>
-                    <Link to="/faqs" className="footer-link" id="button">
+                    <Link to="/#faqs" className="footer-link" id="button">
                         FAQs
                     </Link>
                 </div>
