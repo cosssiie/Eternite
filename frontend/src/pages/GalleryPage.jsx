@@ -17,6 +17,28 @@ function GalleryPage() {
         <div className="gallery-page-container">
             <TitleHeader title="Gallery" />
             <div className="gallery-container">
+                <div className="filter-search-container">
+                    <div className="search-bar-content">
+                        <button className="filter-button">
+                            <img
+                                src="./src/assets/icons/filter.svg"
+                                alt="Filter icon"
+                                className="filter-icon-img"
+                            />
+                        </button>
+
+                        <div className="search-input-wrapper">
+                            <input id="button" type="text" placeholder="SEARCH" className="search-input" />
+                            <button className="search-submit">
+                                <img
+                                    src="./src/assets/icons/search.svg"
+                                    alt="Search icon"
+                                    className="search-icon-img"
+                                />
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div className="masonry-grid">
                     {mockPublications.map(pub => (
                         <Publication
