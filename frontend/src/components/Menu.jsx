@@ -8,7 +8,7 @@ function Menu({ isOpen, onClose }) {
     const [view, setView] = useState("main"); // "main", "categories", "subcategories"
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-
+    const user = JSON.parse(localStorage.getItem('user'));
 
     useEffect(() => {
         if (isOpen) {
@@ -70,7 +70,14 @@ function Menu({ isOpen, onClose }) {
                             <Link to="/account" className="nav-link" id="nav" onClick={onClose}>
                                 Account
                                 <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
-                            </Link></>
+                            </Link>
+                            {user?.role === 'admin' && (
+                                <Link to="/admin-panel" className="nav-link admin-link" id="nav" onClick={onClose}>
+                                    Admin Panel
+                                    <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                </Link>
+                            )}
+                        </>
                     )}
 
                     {view === "categories" && (

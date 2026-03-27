@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUpPage";
 import VerticalMarquee from "./components/VerticalMarquee";
 import ScrollManager from "./components/ScrollToTop";
 import AccountPage from "./pages/AccoutPage";
+import AdminPanelPage from "./pages/AdminPanelPage";
 
 function App() {
   const location = useLocation();
@@ -37,6 +38,15 @@ function App() {
     }
   }, []);
 
+  const AdminRoute = ({ children }) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (!user || user.role !== 'admin') {
+      return <Navigate to="/" replace />;
+    }
+    return children;
+  };
+
   return (
     <>
       <ScrollManager />
@@ -51,6 +61,14 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/account" element={<AccountPage />} />
+              <Route
+                path="/admin-panel"
+                element={
+                  <AdminRoute>
+                    <AdminPanelPage />
+                  </AdminRoute>
+                }
+              />
             </Routes>
           </main>
         </div>
