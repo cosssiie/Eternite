@@ -37,9 +37,27 @@ const seed = async () => {
             favourites: [],
         },
         {
-            name: 'Jane Smith',
-            email: 'jane@test.com',
-            password: await bcrypt.hash('user123', 10),
+            name: 'Oliver',
+            email: 'oliv01@test.com',
+            password: await bcrypt.hash('qwerty', 10),
+            role: 'user',
+            isActive: true,
+            verifyToken: null,
+            favourites: [],
+        },
+        {
+            name: 'Kamilla Antique',
+            email: 'kamilla_123@test.com',
+            password: await bcrypt.hash('hello', 10),
+            role: 'user',
+            isActive: true,
+            verifyToken: null,
+            favourites: [],
+        },
+        {
+            name: 'Elizabeth',
+            email: 'lis_lis@test.com',
+            password: await bcrypt.hash('1234', 10),
             role: 'user',
             isActive: true,
             verifyToken: null,
@@ -192,7 +210,7 @@ const seed = async () => {
                     key: 'condition', label: 'Condition', type: 'select', required: true,
                     options: ['Excellent', 'Good', 'Fair']
                 },
-                { key: 'size', label: 'Size', type: 'number'},
+                { key: 'size', label: 'Size', type: 'number' },
                 { key: 'material', label: 'Material', type: 'text' },
             ],
         },
@@ -246,14 +264,11 @@ const seed = async () => {
             category: catChairs._id,
             fields: [
                 { key: 'year', label: 'Year', type: 'number', required: true },
-                {
-                    key: 'style', label: 'Style', type: 'select',
-                    options: ['Baroque', 'Classicism', 'Empire', 'Art Nouveau', 'Victorian', 'Another']
-                },
+                { key: 'style', label: 'Style', type: 'text', },
                 { key: 'material', label: 'Material', type: 'text' },
                 {
                     key: 'condition', label: 'Condition', type: 'select',
-                    options: ['Excellent', 'Good', 'Needs restoration']
+                    options: ['Excellent', 'Good', 'Needs restoration', 'Another']
                 },
                 { key: 'origin', label: 'Country of origin', type: 'text' },
             ],
@@ -338,152 +353,165 @@ const seed = async () => {
     // ─── PUBLICATIONS ─────────────────────────────────────
     const publications = await Publication.insertMany([
         {
-            title: 'Victorian Lady\'s Hat, 1890',
-            description: 'Exquisite Victorian lady\'s hat from the late 19th century',
-            content: 'Crafted from French felt and adorned with silk ribbon and artificial flowers. Original shape and colour preserved.',
-            image: 'uploads/hat.jpg',
-            author: users[1]._id,
-            category: catAccessories._id,
-            status: 'approved',
-            attributes: [
-                { key: 'year', label: 'Year', value: '1890' },
-                { key: 'condition', label: 'Condition', value: 'Good' },
-                { key: 'material', label: 'Material', value: 'Felt' },
-                { key: 'origin', label: 'Country of origin', value: 'France' },
+            title: 'Victorian Button-Back Floral Armchair',
+            description: 'Elegant mid-19th century armchair with deep tufting and floral upholstery',
+            content: 'A classic Victorian piece featuring intricate blue floral chintz fabric. The chair is distinguished by its deep button-tufted backrest and rare ornate gilded front legs with original brass casters.',
+            images: [
+                '/uploads/19th-century-country-house-armchair.jpg',
+                '/uploads/19th-century-country-house-armchair-front.jpg',
+                '/uploads/19th-century-country-house-armchair-back.jpg',
+                '/uploads/19th-century-country-house-armchair-details.jpg'
             ],
-        },
-        {
-            title: 'Victorian Era Jacket',
-            description: 'Ladies Victorian jacket with original buttons',
-            content: 'Tailored from natural dark blue wool. All original pearl buttons intact. Lining requires minor repair.',
-            image: 'uploads/jacket.jpg',
-            author: users[1]._id,
-            category: catOuterwear._id,
-            status: 'pending',
-            attributes: [
-                { key: 'year', label: 'Year', value: '1875' },
-                { key: 'condition', label: 'Condition', value: 'Fair' },
-                { key: 'material', label: 'Material', value: 'Wool' },
-                { key: 'style', label: 'Era style', value: 'Victorian' },
-            ],
-        },
-        {
-            title: 'Landscape by Unknown Author, XIX c.',
-            description: 'Oil landscape from the French school of painting',
-            content: 'Painted in oils on canvas. Depicts a rural landscape with a river and trees. Restored in 2010.',
-            image: 'uploads/painting.jpg',
             author: users[2]._id,
-            category: catPaintings._id,
+            category: catChairs._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Year', value: '1860' },
-                { key: 'epoch', label: 'Epoch', value: 'Romanticism' },
-                { key: 'technique', label: 'Technique', value: 'Oil' },
-                { key: 'size', label: 'Size (cm)', value: '60x80' },
-                { key: 'condition', label: 'Condition', value: 'Restored' },
-                { key: 'school', label: 'Art school', value: 'French' },
+                { key: 'year', label: 'Year', value: '1865' },
+                { key: 'style', label: 'Style', value: 'Victorian' },
+                { key: 'material', label: 'Material', value: 'Gilded wood, Chintz fabric' },
+                { key: 'condition', label: 'Condition', value: 'Excellent' },
+                { key: 'origin', label: 'Country of origin', value: 'United Kingdom' },
             ],
         },
         {
-            title: 'Byzantine Mosaic Fragment',
-            description: 'Fragment of Byzantine mosaic in glass smalt',
-            content: 'Unique fragment of a 10th century Byzantine mosaic. Made from gold and blue glass smalt. Depicts an ornamental fragment.',
-            image: 'uploads/mosaic.jpg',
-            author: users[0]._id,
-            category: catMosaic._id,
-            status: 'rejected',
-            moderationComment: 'Insufficient information about the provenance of the item',
-            attributes: [
-                { key: 'year', label: 'Year', value: '900' },
-                { key: 'epoch', label: 'Epoch', value: 'Byzantine' },
-                { key: 'material', label: 'Material', value: 'Glass' },
-                { key: 'size', label: 'Size (cm)', value: '30x30' },
-                { key: 'condition', label: 'Condition', value: 'Fragmentary' },
+            title: 'Classic Crimson Velvet Armchair',
+            description: 'Rich Victorian-era tufted armchair in vibrant red velvet',
+            content: 'A quintessentially comfortable Victorian armchair with a high tufted back and rolled arms. Supported by finely turned mahogany legs on brass casters, upholstered in a high-quality crimson velvet.',
+            images: [
+                '/uploads/19th-century-red-velvet-armchair.jpg',
+                '/uploads/19th-century-red-velvet-armchair-front.jpg',
+                '/uploads/19th-century-red-velvet-armchair-back.jpg',
+                '/uploads/19th-century-red-velvet-armchair-details.jpg'
             ],
-        },
-        {
-            title: 'Empire Style Armchair',
-            description: 'Luxurious early 19th century armchair in Empire style',
-            content: 'Crafted from walnut wood with gilded details. Upholstery replaced with authentic period fabric.',
-            image: 'uploads/chair.jpg',
             author: users[1]._id,
             category: catChairs._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Year', value: '1815' },
-                { key: 'style', label: 'Style', value: 'Empire' },
-                { key: 'material', label: 'Material', value: 'Walnut, gilding' },
+                { key: 'year', label: 'Year', value: '1880' },
+                { key: 'style', label: 'Style', value: 'Late Victorian' },
+                { key: 'material', label: 'Material', value: 'Mahogany, Velvet' },
                 { key: 'condition', label: 'Condition', value: 'Good' },
+                { key: 'origin', label: 'Country of origin', value: 'United Kingdom' },
+            ],
+        },
+        {
+            title: 'Antique Restoration Project Armchair',
+            description: 'Mid-19th century armchair frame showcasing authentic internal construction',
+            content: 'A rare opportunity for collectors or restorers. This piece reveals original horsehair stuffing and burlap layers, retaining portions of its authentic blue damask fabric. Features ebonized front legs with brass caps.',
+            images: [
+                '/uploads/19th-century-armchair.jpg',
+                '/uploads/19th-century-armchair-front.jpg',
+                '/uploads/19th-century-armchair-back.jpg'
+            ],
+            author: users[3]._id,
+            category: catChairs._id,
+            status: 'approved',
+            attributes: [
+                { key: 'year', label: 'Year', value: '1850' },
+                { key: 'style', label: 'Style', value: 'Early Victorian' },
+                { key: 'material', label: 'Material', value: 'Wood, Horsehair, Damask' },
+                { key: 'condition', label: 'Condition', value: 'Requires Restoration' },
                 { key: 'origin', label: 'Country of origin', value: 'France' },
             ],
         },
         {
-            title: 'Chinese Ming Dynasty Vase',
-            description: 'Rare porcelain vase from the Ming Dynasty period',
-            content: 'Hand-painted porcelain vase with traditional blue and white patterns. Minor hairline crack on base.',
-            image: 'uploads/vase.jpg',
-            author: users[2]._id,
-            category: catVases._id,
+            title: 'Olive Velvet Button-Back Armchair',
+            description: 'A charming Victorian tufted armchair in muted olive green velvet',
+            content: 'This elegant low-profile armchair features deep button tufting and a distinctive decorative fringe along the base. Crafted during the mid-Victorian era, it sits on beautifully turned mahogany front legs and splayed rear legs, all retaining their original brass casters.',
+            images: [
+                '/uploads/19th-century-tub-back-armchair.jpg',
+                '/uploads/19th-century-tub-back-armchair-front.jpg',
+                '/uploads/19th-century-tub-back-armchair-back.jpg',
+                '/uploads/19th-century-tub-back-armchair-details.jpg',
+            ],
+            author: users[4]._id,
+            category: catChairs._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Year', value: '1420' },
-                { key: 'origin', label: 'Country of origin', value: 'China' },
-                { key: 'material', label: 'Material', value: 'Porcelain' },
-                { key: 'height', label: 'Height (cm)', value: '42' },
-                { key: 'condition', label: 'Condition', value: 'Has cracks' },
+                { key: 'year', label: 'Year', value: '1875' },
+                { key: 'style', label: 'Style', value: 'Victorian' },
+                { key: 'material', label: 'Material', value: 'Mahogany, Velvet' },
+                { key: 'condition', label: 'Condition', value: 'Good (Vintage patina)' },
+                { key: 'origin', label: 'Country of origin', value: 'United Kingdom' },
             ],
         },
         {
-            title: 'Art Nouveau Bronze Chandelier',
-            description: 'Stunning Art Nouveau chandelier with floral motifs',
-            content: 'Six-arm bronze chandelier with original glass shades. Floral and leaf motifs throughout. Fully restored and rewired.',
-            image: 'uploads/chandelier.jpg',
-            author: users[0]._id,
-            category: catChandeliers._id,
+            title: 'Ornate Mahogany Salon Armchair',
+            description: 'Exquisite Rococo Revival armchair with intricate carvings and cream upholstery',
+            content: 'A high-quality carved mahogany armchair featuring a hand-carved frame with floral cresting and scrolled armrests. The back is expertly button-tufted and upholstered in premium cream fabric, standing on graceful cabriole legs with original casters.',
+            images: [
+                '/uploads/antique-victorian-armchair.jpg',
+                '/uploads/antique-victorian-armchair-front.jpg',
+                '/uploads/antique-victorian-armchair-details.jpg',
+                '/uploads/antique-victorian-armchair-back.jpg',
+            ],
+            author: users[3]._id,
+            category: catChairs._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Year', value: '1905' },
-                { key: 'style', label: 'Style', value: 'Art Nouveau' },
-                { key: 'material', label: 'Material', value: 'Bronze, glass' },
-                { key: 'size', label: 'Size (cm)', value: '80x60' },
+                { key: 'year', label: 'Year', value: '1890' },
+                { key: 'style', label: 'Style', value: 'Rococo Revival' },
+                { key: 'material', label: 'Material', value: 'Mahogany, Cotton-linen blend' },
+                { key: 'condition', label: 'Condition', value: 'Excellent (Restored)' },
+                { key: 'origin', label: 'Country of origin', value: 'France' },
+            ],
+        },
+        {
+            title: 'Victorian Double-Ended Velvet Sofa',
+            description: 'Exquisite mid-19th century double-ended sofa in olive green velvet',
+            content: 'An elegant Victorian chaise longue or "tête-à-tête" sofa featuring a distinctive double-ended design. The high backrests are expertly button-tufted in a rich olive green velvet, accented by a decorative golden rope trim. The solid mahogany frame is highlighted by a central carved motif and rests on delicate cabriole legs with original brass casters.',
+            images: [
+                '/uploads/antique-victorian-spoon-back-settee.jpg',
+                '/uploads/antique-victorian-spoon-back-settee-back.jpg',
+                '/uploads/antique-victorian-spoon-back-settee-details.jpg',
+            ],
+            author: users[4]._id,
+            category: catSofas._id,
+            status: 'approved',
+            attributes: [
+                { key: 'year', label: 'Year', value: '1860' },
+                { key: 'style', label: 'Style', value: 'Victorian' },
+                { key: 'material', label: 'Material', value: 'Mahogany, Velvet' },
                 { key: 'condition', label: 'Condition', value: 'Excellent' },
+                { key: 'origin', label: 'Country of origin', value: 'United Kingdom' },
             ],
         },
         {
-            title: 'Persian Oriental Rug, XVII c.',
-            description: 'Hand-knotted Persian rug with traditional geometric patterns',
-            content: 'Finely hand-knotted wool rug from Persia. Features intricate geometric and floral medallion design. Some wear consistent with age.',
-            image: 'uploads/rug.jpg',
-            author: users[1]._id,
-            category: catOrientalRugs._id,
+            title: 'Regency Mahogany Tufted Settee',
+            description: 'Luxurious Regency style settee with champagne crushed velvet upholstery',
+            content: 'This masterful piece of furniture features a wide, deep button-tufted backrest providing both comfort and a classic aesthetic. Upholstered in a lustrous champagne crushed velvet, the settee is framed by beautifully carved mahogany scroll arms. It is supported by four robustly fluted mahogany legs finished with authentic brass cup casters.',
+            images: [
+                '/uploads/early-19th-century-william-iv-period-velvet-sofa.jpg',
+                '/uploads/early-19th-century-william-iv-period-velvet-sofa-back.jpg',
+                '/uploads/early-19th-century-william-iv-period-velvet-sofa-details.jpg',
+            ],
+            author: users[2]._id,
+            category: catSofas._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Year', value: '1650' },
-                { key: 'origin', label: 'Country of origin', value: 'Persia' },
-                { key: 'material', label: 'Material', value: 'Wool' },
-                { key: 'size', label: 'Size (cm)', value: '200x300' },
-                { key: 'condition', label: 'Condition', value: 'Good' },
+                { key: 'year', label: 'Year', value: '1830' },
+                { key: 'style', label: 'Style', value: 'Regency' },
+                { key: 'material', label: 'Material', value: 'Mahogany, Crushed Velvet' },
+                { key: 'condition', label: 'Condition', value: 'Very Good' },
+                { key: 'origin', label: 'Country of origin', value: 'United Kingdom' },
             ],
-        },
+        }
     ]);
     console.log('✅ Публікації створено');
 
     // ─── FAVOURITES ───────────────────────────────────────
-    // John: чужие публикации в избранном
     await User.findByIdAndUpdate(users[1]._id, {
         favourites: [
-            publications[2]._id, // Landscape (Jane's)
-            publications[5]._id, // Vase (Jane's)
-            publications[6]._id, // Chandelier (Admin's)
+            publications[2]._id,
+            publications[3]._id,
         ]
     });
 
-    // Jane: чужие и свои в избранном
     await User.findByIdAndUpdate(users[2]._id, {
         favourites: [
-            publications[0]._id, // Hat (John's)
-            publications[4]._id, // Armchair (John's)
-            publications[7]._id, // Rug (John's)
+            publications[1]._id,
+            publications[4]._id,
+            publications[7]._id,
         ]
     });
 
