@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import Menu from "./Menu";
 
 function Header() {
     const location = useLocation();
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -31,15 +35,25 @@ function Header() {
 
             {!hideAuthButtons && (
                 <div className="account-buttons">
-                    <Link to="/signin">
-                        <button className="sign-in-button" id="button">SIGN IN</button>
-                    </Link>
+                    {isLoggedIn ? (
+                        <button className="menu-button" id="button" onClick={toggleMenu}>
+                            <img src="./src/assets/icons/menu.svg" alt="menu" />
+                        </button>
 
-                    <Link to="/signup">
-                        <button className="sign-up-button" id="button">SIGN UP</button>
-                    </Link>
+                    ) : (
+                        <>
+                            <Link to="/signin">
+                                <button className="sign-in-button" id="button">SIGN IN</button>
+                            </Link>
+
+                            {/* <Link to="/signup"> */}
+                            <button className="sign-up-button" id="button" onClick={() => setIsLoggedIn(true)}>SIGN UP</button>
+                            {/* </Link> */}
+                        </>
+                    )}
                 </div>
             )}
+            <Menu isOpen={isMenuOpen} onClose={toggleMenu} />
         </header>
     );
 }
