@@ -76,13 +76,20 @@
 }
 
 .masonry-grid {
-    columns: 4;
-    column-gap: 1.5rem;
+    column-gap: 1.5rem; 
+    display: flex;
+    align-items: flex-start;
+}
+
+.masonry-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .publication-card {
     break-inside: avoid;
-    margin-bottom: 1.5rem;
     cursor: pointer;
 }
 
@@ -187,4 +194,9 @@
     bottom: 12px;
     right: 12px;
     color: var(--main-white-color);
+}
+
+.main-loader, .no-found-container{
+    display: flex;
+    justify-content: center;
 }

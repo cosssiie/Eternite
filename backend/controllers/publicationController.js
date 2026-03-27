@@ -24,10 +24,17 @@ const getOne = async (req, res, next) => {
 // створити публікацію
 const create = async (req, res, next) => {
     try {
-        const image = req.file ? req.file.path : null;
+        let images = [];
+        if (req.files && req.files.length > 0) {
+            images = req.files.map(file => file.path);
+        } 
+        else if (req.file) {
+            images = [req.file.path];
+        }
+
         const publication = await publicationService.create({
             ...req.body,
-            image,
+            images,
             author: req.user.id,
         });
         res.status(201).json({ success: true, publication });
@@ -39,11 +46,15 @@ const create = async (req, res, next) => {
 // оновити публікацію
 const update = async (req, res, next) => {
     try {
-        const image = req.file ? req.file.path : undefined;
-        const publication = await publicationService.update(req.params.id, {
-            ...req.body,
-            ...(image && { image }),
-        });
+        let updateData = { ...req.body };
+
+        if (req.files && req.files.length > 0) {
+            updateData.images = req.files.map(file => file.path);
+        } else if (req.file) {
+            updateData.images = [req.file.path];
+        }
+
+        const publication = await publicationService.update(req.params.id, updateData);
         res.json({ success: true, publication });
     } catch (err) {
         next(err);

@@ -1,17 +1,16 @@
 import { useState } from 'react';
 
-function Publication({ title, image, author }) {
+function Publication({ title, images = [], author }) {
     const [isFavourite, setIsFavourite] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
-
+    
     const toggleFavourite = (e) => {
         e.stopPropagation();
         const adding = !isFavourite;
         setIsFavourite(adding);
         setToastMessage(adding ? 'Added to favourites' : 'Removed from favourites');
         setShowToast(false);
-
         setTimeout(() => setShowToast(true), 10);
         setTimeout(() => setShowToast(false), 2500);
     };
@@ -20,7 +19,11 @@ function Publication({ title, image, author }) {
         <>
             <div className="publication-card">
                 <div className="publication-image-wrapper">
-                    <img src={image} alt={title} className="publication-image" />
+                    <img
+                        src={images[0]}
+                        alt={title}
+                        className="publication-image"
+                    />
 
                     <div className="publication-overlay">
                         <button
@@ -37,7 +40,9 @@ function Publication({ title, image, author }) {
                         </button>
 
                         {author && (
-                            <span className="publication-author" id="button">@{author}</span>
+                            <span className="publication-author" id="button">
+                                @{typeof author === 'object' ? author.name : author}
+                            </span>
                         )}
                     </div>
                 </div>

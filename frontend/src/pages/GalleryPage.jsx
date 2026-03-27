@@ -1,18 +1,45 @@
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import TitleHeader from '../components/TitleHeader.jsx';
-import Publication from '../components/Publication.jsx';
-
-const mockPublications = [
-    { _id: '1', image: 'https://picsum.photos/seed/1/400/500', author: 'john_doe' },
-    { _id: '2', image: 'https://picsum.photos/seed/2/400/300', author: 'jane_smith' },
-    { _id: '3', image: 'https://picsum.photos/seed/3/400/600', author: 'art_collector' },
-    { _id: '4', image: 'https://picsum.photos/seed/4/400/400', author: 'byzantium' },
-    { _id: '5', image: 'https://picsum.photos/seed/5/400/550', author: 'antique_hub' },
-    { _id: '6', image: 'https://picsum.photos/seed/6/400/350', author: 'numismat' },
-    { _id: '7', image: 'https://picsum.photos/seed/7/400/480', author: 'ming_archive' },
-    { _id: '8', image: 'https://picsum.photos/seed/8/400/320', author: 'bronze_age' },
-];
+import PublicationList from '../components/PublicationList.jsx';
+import { publicationApi } from '../api/publicationApi';
+import { categoryApi } from '../api/categoryApi';
 
 function GalleryPage() {
+    const [publications, setPublications] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [searchParams] = useSearchParams();
+    const categoryId = searchParams.get('category');
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            try {
+                setIsLoading(true);
+                const params = {};
+                if (categoryId && categoryId !== 'all') {
+                    params.category = categoryId;
+                }
+                const [pubRes, catRes] = await Promise.all([
+                    publicationApi.getAll(params),
+                    categoryApi.getTree()
+                ]);
+
+                setPublications(pubRes.data.publications || pubRes.data);
+                setCategories(catRes.data.tree || catRes.data);
+
+            } catch (err) {
+                console.error("Error loading gallery:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadInitialData();
+    }, [categoryId]);
+
+
     return (
         <div className="gallery-page-container">
             <TitleHeader title="Gallery" />
@@ -39,18 +66,11 @@ function GalleryPage() {
                         </div>
                     </div>
                 </div>
-                <div className="masonry-grid">
-                    {mockPublications.map(pub => (
-                        <Publication
-                            key={pub._id}
-                            title={pub.title}
-                            category={pub.category}
-                            year={pub.year}
-                            image={pub.image}
-                            author={pub.author}
-                        />
-                    ))}
-                </div>
+                {isLoading ? (
+                    <div className="main-loader" id="button">Loading collection...</div>
+                ) : (
+                    <PublicationList publications={publications} />
+                )}
             </div>
         </div>
     );
