@@ -8,6 +8,7 @@ import SignIn from "./pages/SignInPage";
 import SignUp from "./pages/SignUpPage";
 import VerticalMarquee from "./components/VerticalMarquee";
 import ScrollManager from "./components/ScrollToTop";
+import AccountPage from "./pages/AccoutPage";
 
 function App() {
   const location = useLocation();
@@ -49,6 +50,7 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/gallery" element={<GalleryPage />} />
+              <Route path="/account" element={<AccountPage />} />
             </Routes>
           </main>
         </div>

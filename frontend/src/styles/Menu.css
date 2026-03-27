@@ -11,6 +11,7 @@
     flex-direction: column;
     transform: translateX(100%);
     transition: transform 0.4s cubic-bezier(0, 0.20, 0.51, 1);
+    overflow: hidden;
 }
 
 .menu-overlay {
@@ -40,7 +41,7 @@
 .menu-header {
     height: 5rem;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
     border-bottom: 0.5px solid var(--main-black-color);
@@ -49,6 +50,17 @@
 .menu-links {
     display: flex;
     flex-direction: column;
+    cursor: pointer;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .nav-link {
@@ -72,16 +84,23 @@
     transform: translateX(5px);
 }
 
-.close-button {
+.close-button,
+.back-button {
     background: none;
     border: none;
     cursor: pointer;
 }
 
-.close-button img {
+.close-button {
+    margin-left: auto;
+}
+
+.close-button img,
+.back-button img {
     width: 30px;
 }
 
-.close-button img:hover {
+.close-button img:hover,
+.back-button img:hover {
     opacity: 0.6;
 }
