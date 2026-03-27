@@ -1,0 +1,33 @@
+.account-container {
+    margin-left: 2.25rem;
+    padding: 2rem;
+}
+
+.account-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-username {
+    color: var(--main-black-color);
+}
+
+.account-nav {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.acc-nav-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--main-black-color);
+    transition: opacity 0.3s ease;
+    text-transform: none;
+}
+
+.acc-nav-link:hover {
+    transform: translateY(-1px);
+}
