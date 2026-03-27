@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const connectDB = require('../config/db');
@@ -25,6 +25,7 @@ const seed = async () => {
             role: 'admin',
             isActive: true,
             verifyToken: null,
+            favourites: [],
         },
         {
             name: 'John Doe',
@@ -33,6 +34,7 @@ const seed = async () => {
             role: 'user',
             isActive: true,
             verifyToken: null,
+            favourites: [],
         },
         {
             name: 'Jane Smith',
@@ -41,277 +43,456 @@ const seed = async () => {
             role: 'user',
             isActive: true,
             verifyToken: null,
+            favourites: [],
         },
     ]);
-    console.log('Користувачів створено');
+    console.log('✅ Користувачів створено');
 
     // ─── ROOT CATEGORIES ─────────────────────────────────
-    const [catClothes, catArt, catFurniture, catCoins] = await Category.insertMany([
-        { name: 'Одяг', slug: 'odyag', parent: null, isActive: true },
-        { name: 'Предмети мистецтва', slug: 'mystetstvo', parent: null, isActive: true },
-        { name: 'Меблі', slug: 'mebli', parent: null, isActive: true },
-        { name: 'Монети та медалі', slug: 'monety', parent: null, isActive: true },
+    const [
+        catClothing,
+        catArt,
+        catFurniture,
+        catHomeDecor,
+        catKitchen,
+        catLighting,
+        catRugs,
+    ] = await Category.insertMany([
+        { name: 'Clothing', parent: null, isActive: true },
+        { name: 'Art', parent: null, isActive: true },
+        { name: 'Furniture', parent: null, isActive: true },
+        { name: 'Home Decor', parent: null, isActive: true },
+        { name: 'Kitchen And Bar', parent: null, isActive: true },
+        { name: 'Lighting', parent: null, isActive: true },
+        { name: 'Rugs', parent: null, isActive: true },
     ]);
-    console.log('Кореневі категорії створено');
+    console.log('✅ Кореневі категорії створено');
 
     // ─── SUBCATEGORIES ────────────────────────────────────
     const [
+        // Clothing
         catAccessories,
         catOuterwear,
+        catDresses,
+        catShirts,
+        catFootwear,
+        // Art
         catPaintings,
         catMosaic,
+        catSculpture,
+        catPrints,
+        // Furniture
         catChairs,
         catTables,
-        catCoinsAncient,
-        catMedals,
+        catCabinets,
+        catSofas,
+        // Home Decor
+        catVases,
+        catClocks,
+        catMirrors,
+        // Kitchen And Bar
+        catCutlery,
+        catGlassware,
+        catCeramics,
+        // Lighting
+        catChandeliers,
+        catLamps,
+        // Rugs
+        catOrientalRugs,
+        catTapestries,
     ] = await Category.insertMany([
-        { name: 'Аксесуари', slug: 'aksesuary', parent: catClothes._id, isActive: true },
-        { name: 'Верхній одяг', slug: 'verkhniy-odyag', parent: catClothes._id, isActive: true },
-        { name: 'Картини', slug: 'kartyny', parent: catArt._id, isActive: true },
-        { name: 'Мозаїка', slug: 'mozayika', parent: catArt._id, isActive: true },
-        { name: 'Крісла', slug: 'krisla', parent: catFurniture._id, isActive: true },
-        { name: 'Столи', slug: 'stoly', parent: catFurniture._id, isActive: true },
-        { name: 'Античні монети', slug: 'antychni-monety', parent: catCoins._id, isActive: true },
-        { name: 'Медалі', slug: 'medali', parent: catCoins._id, isActive: true },
+        // Clothing
+        { name: 'Accessories', parent: catClothing._id, isActive: true },
+        { name: 'Outerwear', parent: catClothing._id, isActive: true },
+        { name: 'Dresses', parent: catClothing._id, isActive: true },
+        { name: 'Shirts', parent: catClothing._id, isActive: true },
+        { name: 'Footwear', parent: catClothing._id, isActive: true },
+        // Art
+        { name: 'Paintings', parent: catArt._id, isActive: true },
+        { name: 'Mosaic', parent: catArt._id, isActive: true },
+        { name: 'Sculpture', parent: catArt._id, isActive: true },
+        { name: 'Prints', parent: catArt._id, isActive: true },
+        // Furniture
+        { name: 'Chairs', parent: catFurniture._id, isActive: true },
+        { name: 'Tables', parent: catFurniture._id, isActive: true },
+        { name: 'Cabinets', parent: catFurniture._id, isActive: true },
+        { name: 'Sofas', parent: catFurniture._id, isActive: true },
+        // Home Decor
+        { name: 'Vases', parent: catHomeDecor._id, isActive: true },
+        { name: 'Clocks', parent: catHomeDecor._id, isActive: true },
+        { name: 'Mirrors', parent: catHomeDecor._id, isActive: true },
+        // Kitchen And Bar
+        { name: 'Cutlery', parent: catKitchen._id, isActive: true },
+        { name: 'Glassware', parent: catKitchen._id, isActive: true },
+        { name: 'Ceramics', parent: catKitchen._id, isActive: true },
+        // Lighting
+        { name: 'Chandeliers', parent: catLighting._id, isActive: true },
+        { name: 'Lamps', parent: catLighting._id, isActive: true },
+        // Rugs
+        { name: 'Oriental Rugs', parent: catRugs._id, isActive: true },
+        { name: 'Tapestries', parent: catRugs._id, isActive: true },
     ]);
-    console.log('Підкатегорії створено');
+    console.log('✅ Підкатегорії створено');
 
     // ─── TEMPLATES ────────────────────────────────────────
     await CategoryTemplate.insertMany([
         {
             category: catAccessories._id,
             fields: [
-                { key: 'year', label: 'Рік виготовлення', type: 'number', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
                 {
-                    key: 'condition', label: 'Стан', type: 'select', required: true,
-                    options: ['відмінний', 'добрий', 'задовільний', 'потребує реставрації']
+                    key: 'condition', label: 'Condition', type: 'select', required: true,
+                    options: ['Excellent', 'Good', 'Fair', 'Needs restoration']
                 },
-                { key: 'material', label: 'Матеріал', type: 'text' },
-                { key: 'origin', label: 'Країна походження', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'origin', label: 'Country of origin', type: 'text' },
             ],
         },
         {
             category: catOuterwear._id,
             fields: [
-                { key: 'year', label: 'Рік виготовлення', type: 'number', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
                 {
-                    key: 'condition', label: 'Стан', type: 'select', required: true,
-                    options: ['відмінний', 'добрий', 'задовільний']
+                    key: 'condition', label: 'Condition', type: 'select', required: true,
+                    options: ['Excellent', 'Good', 'Fair']
                 },
-                { key: 'size', label: 'Розмір', type: 'text' },
-                { key: 'material', label: 'Матеріал', type: 'text' },
-                { key: 'style', label: 'Стиль епохи', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'style', label: 'Era style', type: 'text' },
+            ],
+        },
+        {
+            category: catDresses._id,
+            fields: [
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                {
+                    key: 'condition', label: 'Condition', type: 'select', required: true,
+                    options: ['Excellent', 'Good', 'Fair']
+                },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'style', label: 'Era style', type: 'text' },
+            ],
+        },
+        {
+            category: catShirts._id,
+            fields: [
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                {
+                    key: 'condition', label: 'Condition', type: 'select', required: true,
+                    options: ['Excellent', 'Good', 'Fair']
+                },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'style', label: 'Era style', type: 'text' },
+            ],
+        },
+        {
+            category: catFootwear._id,
+            fields: [
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                {
+                    key: 'condition', label: 'Condition', type: 'select', required: true,
+                    options: ['Excellent', 'Good', 'Fair']
+                },
+                { key: 'size', label: 'Size', type: 'number'},
+                { key: 'material', label: 'Material', type: 'text' },
             ],
         },
         {
             category: catPaintings._id,
             fields: [
-                { key: 'year', label: 'Рік створення', type: 'number', required: true },
-                { key: 'epoch', label: 'Епоха', type: 'text', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'epoch', label: 'Epoch', type: 'text', required: true },
                 {
-                    key: 'technique', label: 'Техніка', type: 'select',
-                    options: ['олія', 'акварель', 'темпера', 'пастель', 'графіка']
+                    key: 'technique', label: 'Technique', type: 'select',
+                    options: ['Oil', 'Watercolour', 'Tempera', 'Pastel', 'Graphics', 'Another']
                 },
-                { key: 'size', label: 'Розмір (см)', type: 'text' },
+                { key: 'size', label: 'Size (cm)', type: 'text' },
                 {
-                    key: 'condition', label: 'Стан', type: 'select',
-                    options: ['відмінний', 'добрий', 'реставрована']
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Restored']
                 },
-                { key: 'school', label: 'Художня школа', type: 'text' },
+                { key: 'school', label: 'Art school', type: 'text' },
             ],
         },
         {
             category: catMosaic._id,
             fields: [
-                { key: 'year', label: 'Рік створення', type: 'number', required: true },
-                { key: 'epoch', label: 'Епоха', type: 'text' },
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'epoch', label: 'Epoch', type: 'text' },
                 {
-                    key: 'material', label: 'Матеріал', type: 'select',
-                    options: ['скло', 'камінь', 'кераміка', 'змішана техніка']
+                    key: 'material', label: 'Material', type: 'select',
+                    options: ['Glass', 'Stone', 'Ceramic', 'Mixed media', 'Another']
                 },
-                { key: 'size', label: 'Розмір (см)', type: 'text' },
+                { key: 'size', label: 'Size (cm)', type: 'text' },
                 {
-                    key: 'condition', label: 'Стан', type: 'select',
-                    options: ['відмінний', 'добрий', 'фрагментарна']
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Fragmentary']
+                },
+            ],
+        },
+        {
+            category: catSculpture._id,
+            fields: [
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'epoch', label: 'Epoch', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'height', label: 'Height (cm)', type: 'number' },
+                {
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Needs restoration']
                 },
             ],
         },
         {
             category: catChairs._id,
             fields: [
-                { key: 'year', label: 'Рік виготовлення', type: 'number', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
                 {
-                    key: 'style', label: 'Стиль', type: 'select',
-                    options: ['бароко', 'класицизм', 'ампір', 'модерн', 'вікторіанський']
+                    key: 'style', label: 'Style', type: 'select',
+                    options: ['Baroque', 'Classicism', 'Empire', 'Art Nouveau', 'Victorian', 'Another']
                 },
-                { key: 'material', label: 'Матеріал', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
                 {
-                    key: 'condition', label: 'Стан', type: 'select',
-                    options: ['відмінний', 'добрий', 'потребує реставрації']
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Needs restoration']
                 },
-                { key: 'origin', label: 'Країна походження', type: 'text' },
+                { key: 'origin', label: 'Country of origin', type: 'text' },
             ],
         },
         {
             category: catTables._id,
             fields: [
-                { key: 'year', label: 'Рік виготовлення', type: 'number', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
                 {
-                    key: 'style', label: 'Стиль', type: 'select',
-                    options: ['бароко', 'класицизм', 'ампір', 'модерн']
+                    key: 'style', label: 'Style', type: 'select',
+                    options: ['Baroque', 'Classicism', 'Empire', 'Art Nouveau', 'Another']
                 },
-                { key: 'material', label: 'Матеріал', type: 'text' },
-                { key: 'size', label: 'Розмір (см)', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'size', label: 'Size (cm)', type: 'text' },
                 {
-                    key: 'condition', label: 'Стан', type: 'select',
-                    options: ['відмінний', 'добрий', 'потребує реставрації']
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Needs restoration']
                 },
             ],
         },
         {
-            category: catCoinsAncient._id,
+            category: catVases._id,
             fields: [
-                { key: 'year', label: 'Рік карбування', type: 'text', required: true },
-                { key: 'epoch', label: 'Епоха', type: 'text', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'origin', label: 'Country of origin', type: 'text' },
                 {
-                    key: 'material', label: 'Матеріал', type: 'select',
-                    options: ['золото', 'срібло', 'бронза', 'мідь']
+                    key: 'material', label: 'Material', type: 'select',
+                    options: ['Porcelain', 'Ceramic', 'Glass', 'Bronze', 'Another']
                 },
-                { key: 'diameter', label: 'Діаметр (мм)', type: 'number' },
+                { key: 'height', label: 'Height (cm)', type: 'number' },
                 {
-                    key: 'condition', label: 'Стан', type: 'select',
-                    options: ['відмінний', 'добрий', 'задовільний']
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Has cracks']
                 },
-                { key: 'origin', label: 'Країна походження', type: 'text' },
             ],
         },
         {
-            category: catMedals._id,
+            category: catClocks._id,
             fields: [
-                { key: 'year', label: 'Рік виготовлення', type: 'number', required: true },
-                { key: 'country', label: 'Країна', type: 'text', required: true },
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'origin', label: 'Country of origin', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
                 {
-                    key: 'material', label: 'Матеріал', type: 'select',
-                    options: ['золото', 'срібло', 'бронза']
+                    key: 'working', label: 'Working', type: 'select',
+                    options: ['Yes', 'No', 'Needs repair']
                 },
                 {
-                    key: 'condition', label: 'Стан', type: 'select',
-                    options: ['відмінний', 'добрий', 'задовільний']
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Fair']
                 },
-                { key: 'award', label: 'За що нагорода', type: 'text' },
+            ],
+        },
+        {
+            category: catChandeliers._id,
+            fields: [
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'style', label: 'Style', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'size', label: 'Size (cm)', type: 'text' },
+                {
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Needs restoration']
+                },
+            ],
+        },
+        {
+            category: catOrientalRugs._id,
+            fields: [
+                { key: 'year', label: 'Year', type: 'number', required: true },
+                { key: 'origin', label: 'Country of origin', type: 'text' },
+                { key: 'material', label: 'Material', type: 'text' },
+                { key: 'size', label: 'Size (cm)', type: 'text' },
+                {
+                    key: 'condition', label: 'Condition', type: 'select',
+                    options: ['Excellent', 'Good', 'Fair']
+                },
             ],
         },
     ]);
-    console.log('Шаблони створено');
+    console.log('✅ Шаблони створено');
 
     // ─── PUBLICATIONS ─────────────────────────────────────
-    await Publication.insertMany([
+    const publications = await Publication.insertMany([
         {
-            title: 'Капелюх дамський, 1890',
-            description: 'Розкішний дамський капелюх кінця XIX століття',
-            content: 'Капелюх виготовлений з французького фетру, прикрашений шовковою стрічкою та штучними квітами. Збережено оригінальну форму та колір.',
+            title: 'Victorian Lady\'s Hat, 1890',
+            description: 'Exquisite Victorian lady\'s hat from the late 19th century',
+            content: 'Crafted from French felt and adorned with silk ribbon and artificial flowers. Original shape and colour preserved.',
             image: 'uploads/hat.jpg',
             author: users[1]._id,
             category: catAccessories._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Рік виготовлення', value: '1890' },
-                { key: 'condition', label: 'Стан', value: 'добрий' },
-                { key: 'material', label: 'Матеріал', value: 'фетр' },
-                { key: 'origin', label: 'Країна походження', value: 'Франція' },
+                { key: 'year', label: 'Year', value: '1890' },
+                { key: 'condition', label: 'Condition', value: 'Good' },
+                { key: 'material', label: 'Material', value: 'Felt' },
+                { key: 'origin', label: 'Country of origin', value: 'France' },
             ],
         },
         {
-            title: 'Жакет вікторіанської епохи',
-            description: 'Жіночий жакет вікторіанської епохи з оригінальними ґудзиками',
-            content: 'Жакет пошитий з натуральної вовни темно-синього кольору. Оригінальні перламутрові ґудзики збережені повністю. Підкладка потребує незначного ремонту.',
+            title: 'Victorian Era Jacket',
+            description: 'Ladies Victorian jacket with original buttons',
+            content: 'Tailored from natural dark blue wool. All original pearl buttons intact. Lining requires minor repair.',
             image: 'uploads/jacket.jpg',
             author: users[1]._id,
             category: catOuterwear._id,
             status: 'pending',
             attributes: [
-                { key: 'year', label: 'Рік виготовлення', value: '1875' },
-                { key: 'condition', label: 'Стан', value: 'задовільний' },
-                { key: 'size', label: 'Розмір', value: 'S' },
-                { key: 'material', label: 'Матеріал', value: 'вовна' },
-                { key: 'style', label: 'Стиль епохи', value: 'вікторіанський' },
+                { key: 'year', label: 'Year', value: '1875' },
+                { key: 'condition', label: 'Condition', value: 'Fair' },
+                { key: 'material', label: 'Material', value: 'Wool' },
+                { key: 'style', label: 'Era style', value: 'Victorian' },
             ],
         },
         {
-            title: 'Пейзаж невідомого автора, XIX ст.',
-            description: 'Олійний пейзаж французької школи живопису',
-            content: 'Картина написана олійними фарбами на полотні. Зображено сільський пейзаж з річкою та деревами. Пройшла реставрацію у 2010 році.',
+            title: 'Landscape by Unknown Author, XIX c.',
+            description: 'Oil landscape from the French school of painting',
+            content: 'Painted in oils on canvas. Depicts a rural landscape with a river and trees. Restored in 2010.',
             image: 'uploads/painting.jpg',
             author: users[2]._id,
             category: catPaintings._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Рік створення', value: '1860' },
-                { key: 'epoch', label: 'Епоха', value: 'Романтизм' },
-                { key: 'technique', label: 'Техніка', value: 'олія' },
-                { key: 'size', label: 'Розмір (см)', value: '60x80' },
-                { key: 'condition', label: 'Стан', value: 'реставрована' },
-                { key: 'school', label: 'Художня школа', value: 'французька' },
+                { key: 'year', label: 'Year', value: '1860' },
+                { key: 'epoch', label: 'Epoch', value: 'Romanticism' },
+                { key: 'technique', label: 'Technique', value: 'Oil' },
+                { key: 'size', label: 'Size (cm)', value: '60x80' },
+                { key: 'condition', label: 'Condition', value: 'Restored' },
+                { key: 'school', label: 'Art school', value: 'French' },
             ],
         },
         {
-            title: 'Візантійська мозаїка, фрагмент',
-            description: 'Фрагмент візантійської мозаїки зі скляної смальти',
-            content: 'Унікальний фрагмент візантійської мозаїки X століття. Виготовлений зі скляної смальти золотого та синього кольорів. Зображено фрагмент орнаменту.',
+            title: 'Byzantine Mosaic Fragment',
+            description: 'Fragment of Byzantine mosaic in glass smalt',
+            content: 'Unique fragment of a 10th century Byzantine mosaic. Made from gold and blue glass smalt. Depicts an ornamental fragment.',
             image: 'uploads/mosaic.jpg',
             author: users[0]._id,
             category: catMosaic._id,
             status: 'rejected',
-            moderationComment: 'Недостатньо інформації про походження експонату',
+            moderationComment: 'Insufficient information about the provenance of the item',
             attributes: [
-                { key: 'year', label: 'Рік створення', value: '900' },
-                { key: 'epoch', label: 'Епоха', value: 'Візантія' },
-                { key: 'material', label: 'Матеріал', value: 'скло' },
-                { key: 'size', label: 'Розмір (см)', value: '30x30' },
-                { key: 'condition', label: 'Стан', value: 'фрагментарна' },
+                { key: 'year', label: 'Year', value: '900' },
+                { key: 'epoch', label: 'Epoch', value: 'Byzantine' },
+                { key: 'material', label: 'Material', value: 'Glass' },
+                { key: 'size', label: 'Size (cm)', value: '30x30' },
+                { key: 'condition', label: 'Condition', value: 'Fragmentary' },
             ],
         },
         {
-            title: 'Крісло в стилі ампір',
-            description: 'Розкішне крісло початку XIX століття в стилі ампір',
-            content: 'Крісло виготовлене з горіхового дерева з позолоченими деталями. Оббивка замінена на автентичну тканину відповідного періоду.',
+            title: 'Empire Style Armchair',
+            description: 'Luxurious early 19th century armchair in Empire style',
+            content: 'Crafted from walnut wood with gilded details. Upholstery replaced with authentic period fabric.',
             image: 'uploads/chair.jpg',
             author: users[1]._id,
             category: catChairs._id,
-            status: 'inactive',
+            status: 'approved',
             attributes: [
-                { key: 'year', label: 'Рік виготовлення', value: '1815' },
-                { key: 'style', label: 'Стиль', value: 'ампір' },
-                { key: 'material', label: 'Матеріал', value: 'горіх, позолота' },
-                { key: 'condition', label: 'Стан', value: 'добрий' },
-                { key: 'origin', label: 'Країна походження', value: 'Франція' },
+                { key: 'year', label: 'Year', value: '1815' },
+                { key: 'style', label: 'Style', value: 'Empire' },
+                { key: 'material', label: 'Material', value: 'Walnut, gilding' },
+                { key: 'condition', label: 'Condition', value: 'Good' },
+                { key: 'origin', label: 'Country of origin', value: 'France' },
             ],
         },
         {
-            title: 'Срібна монета Римської імперії',
-            description: 'Срібний денарій часів правління Августа',
-            content: 'Срібний денарій карбований у період правління імператора Августа. На аверсі зображено профіль імператора, на реверсі — богиня Вікторія.',
-            image: 'uploads/coin.jpg',
+            title: 'Chinese Ming Dynasty Vase',
+            description: 'Rare porcelain vase from the Ming Dynasty period',
+            content: 'Hand-painted porcelain vase with traditional blue and white patterns. Minor hairline crack on base.',
+            image: 'uploads/vase.jpg',
             author: users[2]._id,
-            category: catCoinsAncient._id,
+            category: catVases._id,
             status: 'approved',
             attributes: [
-                { key: 'year', label: 'Рік карбування', value: '27 до н.е.' },
-                { key: 'epoch', label: 'Епоха', value: 'Стародавній Рим' },
-                { key: 'material', label: 'Матеріал', value: 'срібло' },
-                { key: 'diameter', label: 'Діаметр (мм)', value: '18' },
-                { key: 'condition', label: 'Стан', value: 'добрий' },
-                { key: 'origin', label: 'Країна походження', value: 'Римська імперія' },
+                { key: 'year', label: 'Year', value: '1420' },
+                { key: 'origin', label: 'Country of origin', value: 'China' },
+                { key: 'material', label: 'Material', value: 'Porcelain' },
+                { key: 'height', label: 'Height (cm)', value: '42' },
+                { key: 'condition', label: 'Condition', value: 'Has cracks' },
+            ],
+        },
+        {
+            title: 'Art Nouveau Bronze Chandelier',
+            description: 'Stunning Art Nouveau chandelier with floral motifs',
+            content: 'Six-arm bronze chandelier with original glass shades. Floral and leaf motifs throughout. Fully restored and rewired.',
+            image: 'uploads/chandelier.jpg',
+            author: users[0]._id,
+            category: catChandeliers._id,
+            status: 'approved',
+            attributes: [
+                { key: 'year', label: 'Year', value: '1905' },
+                { key: 'style', label: 'Style', value: 'Art Nouveau' },
+                { key: 'material', label: 'Material', value: 'Bronze, glass' },
+                { key: 'size', label: 'Size (cm)', value: '80x60' },
+                { key: 'condition', label: 'Condition', value: 'Excellent' },
+            ],
+        },
+        {
+            title: 'Persian Oriental Rug, XVII c.',
+            description: 'Hand-knotted Persian rug with traditional geometric patterns',
+            content: 'Finely hand-knotted wool rug from Persia. Features intricate geometric and floral medallion design. Some wear consistent with age.',
+            image: 'uploads/rug.jpg',
+            author: users[1]._id,
+            category: catOrientalRugs._id,
+            status: 'approved',
+            attributes: [
+                { key: 'year', label: 'Year', value: '1650' },
+                { key: 'origin', label: 'Country of origin', value: 'Persia' },
+                { key: 'material', label: 'Material', value: 'Wool' },
+                { key: 'size', label: 'Size (cm)', value: '200x300' },
+                { key: 'condition', label: 'Condition', value: 'Good' },
             ],
         },
     ]);
-    console.log('Публікації створено');
+    console.log('✅ Публікації створено');
 
-    console.log('Наповлення бд завершено успішно!');
+    // ─── FAVOURITES ───────────────────────────────────────
+    // John: чужие публикации в избранном
+    await User.findByIdAndUpdate(users[1]._id, {
+        favourites: [
+            publications[2]._id, // Landscape (Jane's)
+            publications[5]._id, // Vase (Jane's)
+            publications[6]._id, // Chandelier (Admin's)
+        ]
+    });
+
+    // Jane: чужие и свои в избранном
+    await User.findByIdAndUpdate(users[2]._id, {
+        favourites: [
+            publications[0]._id, // Hat (John's)
+            publications[4]._id, // Armchair (John's)
+            publications[7]._id, // Rug (John's)
+        ]
+    });
+
+    console.log('✅ Вибрані публікації додано');
+    console.log('🎉 Наповнення БД завершено успішно!');
     process.exit();
 };
 
 seed().catch(err => {
-    console.error('Помилка:', err);
+    console.error('❌ Помилка:', err);
     process.exit(1);
 });
