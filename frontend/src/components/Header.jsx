@@ -5,8 +5,9 @@ import Menu from "./Menu";
 function Header() {
     const location = useLocation();
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     useEffect(() => {
@@ -15,6 +16,17 @@ function Header() {
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        const checkAuth = () => setIsLoggedIn(!!localStorage.getItem('token'));
+        window.addEventListener('storage', checkAuth);
+        return () => window.removeEventListener('storage', checkAuth);
     }, []);
 
     const isMainPage = location.pathname === "/";
@@ -39,16 +51,15 @@ function Header() {
                         <button className="menu-button" id="button" onClick={toggleMenu}>
                             <img src="./src/assets/icons/menu.svg" alt="menu" />
                         </button>
-
                     ) : (
                         <>
                             <Link to="/signin">
                                 <button className="sign-in-button" id="button">SIGN IN</button>
                             </Link>
 
-                            {/* <Link to="/signup"> */}
-                            <button className="sign-up-button" id="button" onClick={() => setIsLoggedIn(true)}>SIGN UP</button>
-                            {/* </Link> */}
+                            <Link to="/signup">
+                                <button className="sign-up-button" id="button">SIGN UP</button>
+                            </Link>
                         </>
                     )}
                 </div>

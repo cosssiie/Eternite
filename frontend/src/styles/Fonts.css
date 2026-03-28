@@ -3,21 +3,21 @@
 
 @font-face {
   font-family: 'EthicNew';
-  src: url('./src/assets/fonts/EthicNew-Regular.woff2') format('woff2');
+  src: url('/src/assets/fonts/EthicNew-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'TerminaTest';
-  src: url('./src/assets/fonts/TerminaTest-Regular.otf') format('opentype');
+  src: url('/src/assets/fonts/TerminaTest-Regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'TerminaTest';
-  src: url('./src/assets/fonts/TerminaTest-Light.otf') format('opentype');
+  src: url('/src/assets/fonts/TerminaTest-Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
 }

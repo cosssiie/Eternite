@@ -5,7 +5,7 @@ function Footer() {
     return (
         <footer className="footer-container">
             <div className="footer-logo-section">
-                <img src="./src/assets/icons/logo.svg" alt="Logo" />
+                <img src="/src/assets/icons/logo.svg" alt="Logo" />
             </div>
 
             <div className="footer-nav-row">
@@ -44,13 +44,13 @@ function Footer() {
 
                 <div className="footer-socialmedia">
                     <button>
-                        <img src="./src/assets/icons/youtube-icon.svg" alt="youtube" />
+                        <img src="/src/assets/icons/youtube-icon.svg" alt="youtube" />
                     </button>
                     <button>
-                        <img src="./src/assets/icons/pinterest-icon.svg" alt="pinterest" />
+                        <img src="/src/assets/icons/pinterest-icon.svg" alt="pinterest" />
                     </button>
                     <button>
-                        <img src="./src/assets/icons/instagram-icon.svg" alt="instagram" />
+                        <img src="/src/assets/icons/instagram-icon.svg" alt="instagram" />
                     </button>
                 </div>
             </div>

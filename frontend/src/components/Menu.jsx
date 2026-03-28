@@ -8,6 +8,7 @@ function Menu({ isOpen, onClose }) {
     const [view, setView] = useState("main"); // "main", "categories", "subcategories"
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+
     const user = JSON.parse(localStorage.getItem('user'));
 
     useEffect(() => {
@@ -40,11 +41,11 @@ function Menu({ isOpen, onClose }) {
                 <div className="menu-header">
                     {view !== "main" && (
                         <button className="back-button" onClick={() => setView(view === "subcategories" ? "categories" : "main")}>
-                            <img src="./src/assets/icons/arrow_left.svg" alt="back" />
+                            <img src="/src/assets/icons/arrow_left.svg" alt="back" />
                         </button>
                     )}
                     <button className="close-button" onClick={onClose}>
-                        <img src="./src/assets/icons/close-icon.svg" alt="close" />
+                        <img src="/src/assets/icons/close-icon.svg" alt="close" />
                     </button>
                 </div>
 
@@ -53,28 +54,28 @@ function Menu({ isOpen, onClose }) {
                         <>
                             <Link to="/#video" className="nav-link" id="nav" onClick={onClose}>
                                 Home
-                                <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
                             </Link>
                             <div className="nav-link" id="nav" onClick={() => setView("categories")}>
                                 Gallery
-                                <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
                             </div>
                             <Link to="/#about" className="nav-link" id="nav" onClick={onClose}>
                                 About
-                                <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
                             </Link>
                             <Link to="/#faqs" className="nav-link" id="nav" onClick={onClose}>
                                 FAQs
-                                <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
                             </Link>
                             <Link to="/account" className="nav-link" id="nav" onClick={onClose}>
                                 Account
-                                <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
                             </Link>
                             {user?.role === 'admin' && (
                                 <Link to="/admin-panel" className="nav-link admin-link" id="nav" onClick={onClose}>
                                     Admin Panel
-                                    <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />
+                                    <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
                                 </Link>
                             )}
                         </>
