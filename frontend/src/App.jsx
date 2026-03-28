@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAuth } from "./context/AuthContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MainPage from "./pages/MainPage";
@@ -11,64 +12,19 @@ import ScrollManager from "./components/ScrollToTop";
 import AccountPage from "./pages/AccoutPage";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import VerifyEmail from "./components/VerifyEmail";
+import PublicationPage from "./pages/PublicationPage";
 
 function App() {
+  const { user, isAuth, loading } = useAuth();
   const location = useLocation();
   const isMainPage = location.pathname === "/";
 
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace("#", "");
-      const element = document.getElementById(id);
-
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: "smooth" });
-        }, 0);
-      }
-    }
-  }, [location]);
-
-  useEffect(() => {
-    const [navigation] = window.performance.getEntriesByType('navigation');
-    if (navigation && navigation.type === 'reload') {
-      if (window.location.hash) {
-        window.history.replaceState(null, "", window.location.pathname);
-        window.scrollTo(0, 0);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    const checkUserPersistence = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          await api.get('/users/me');
-        } catch (err) {
-          localStorage.clear();
-          window.location.href = '/signin';
-        }
-      }
-    };
-    checkUserPersistence();
-  }, []);
-
   const AdminRoute = ({ children }) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (!user || user.role !== 'admin') {
-      return <Navigate to="/" replace />;
-    }
-    return children;
+    return user?.role === 'admin' ? children : <Navigate to="/" replace />;
   };
 
   const ProtectedRoute = ({ children }) => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      return <Navigate to="/signup" replace />;
-    }
-    return children;
+    return isAuth ? children : <Navigate to="/signup" replace />;
   };
 
   return (
@@ -91,6 +47,13 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <GalleryPage />
+                  </ProtectedRoute>
+                } />
+              <Route
+                path="/publication/:id"
+                element={
+                  <ProtectedRoute>
+                    <PublicationPage />
                   </ProtectedRoute>
                 } />
               <Route

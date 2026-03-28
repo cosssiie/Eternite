@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Menu from "./Menu";
 
 function Header() {
+    const { isAuth } = useAuth();
     const location = useLocation();
+
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -16,17 +18,6 @@ function Header() {
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        setIsLoggedIn(!!token);
-    }, [location.pathname]);
-
-    useEffect(() => {
-        const checkAuth = () => setIsLoggedIn(!!localStorage.getItem('token'));
-        window.addEventListener('storage', checkAuth);
-        return () => window.removeEventListener('storage', checkAuth);
     }, []);
 
     const isMainPage = location.pathname === "/";
@@ -47,16 +38,15 @@ function Header() {
 
             {!hideAuthButtons && (
                 <div className="account-buttons">
-                    {isLoggedIn ? (
+                    {isAuth ? (
                         <button className="menu-button" id="button" onClick={toggleMenu}>
-                            <img src="./src/assets/icons/menu.svg" alt="menu" />
+                            <img src="/src/assets/icons/menu.svg" alt="menu" />
                         </button>
                     ) : (
                         <>
                             <Link to="/signin">
                                 <button className="sign-in-button" id="button">SIGN IN</button>
                             </Link>
-
                             <Link to="/signup">
                                 <button className="sign-up-button" id="button">SIGN UP</button>
                             </Link>

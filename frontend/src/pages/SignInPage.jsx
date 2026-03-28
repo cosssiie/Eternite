@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import TitleHeader from '../components/TitleHeader.jsx';
 import AuthModal from '../components/AuthModal.jsx';
 import api from '../api/axios';
 
 function SignInPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [modal, setModal] = useState({ message: '', type: '' });
 
@@ -19,8 +21,8 @@ function SignInPage() {
     e.preventDefault();
     try {
       const { data } = await api.post('/users/login', formData);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      login(data.user, data.token);
+
       navigate('/');
     } catch (err) {
       const msg = err.response?.data?.message;
