@@ -2,22 +2,22 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 const send = async () => {
-    try {
-        const result = await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_USER,
-            subject: 'Confirm registration on Éternité',
-            html: `
+  try {
+    const result = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
+      subject: 'Confirm registration on Éternité',
+      html: `
 <div style="max-width: 400px; margin: 0 auto; background: #FFFDF9; padding: 40px 32px;">
   <div style="font-family: Ethic New; text-align: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 24px; margin-bottom: 32px;">
     <span style="font-size: 32px; color: #221F1D;">Éternité</span>
@@ -47,11 +47,11 @@ const send = async () => {
 
 </div>
 `,
-        });
-        console.log('Лист надіслано:', result.messageId);
-    } catch (err) {
-        console.error('Помилка:', err.message);
-    }
+    });
+    console.log('Tle letter has been sent:', result.messageId);
+  } catch (err) {
+    console.error('Error:', err.message);
+  }
 };
 
 send();

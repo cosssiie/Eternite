@@ -14,9 +14,17 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+const generateToken = (id, role) => {
+    return jwt.sign(
+        { id, role },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+    );
+};
+
 const register = async ({ name, email, password }) => {
     const existing = await userRepository.findByEmail(email);
-    if (existing) throw new Error('Email is arleady in use');
+    if (existing) throw new Error('Email is already in use');
 
     const hashed = await bcrypt.hash(password, 10);
     const verifyToken = crypto.randomBytes(32).toString('hex');
@@ -36,29 +44,39 @@ const register = async ({ name, email, password }) => {
 
 const login = async ({ email, password }) => {
     const user = await userRepository.findByEmail(email);
-    if (!user) throw new Error('Uncorrect email or password');
+    if (!user) throw new Error('Incorrect email or password');
     if (!user.isActive) throw new Error('Confirm your email before Sign in');
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) throw new Error('Uncorrect email or password');
+    if (!match) throw new Error('Incorrect email or password');
 
-    const token = jwt.sign(
-        { id: user._id, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: '7d' }
-    );
+    const token = generateToken(user._id, user.role);
 
-    return { token, user: { id: user._id, name: user.name, email: user.email, role: user.role } };
+    return {
+        token,
+        user: { id: user._id, name: user.name, email: user.email, role: user.role }
+    };
 };
 
 const verifyEmail = async (token) => {
     const user = await userRepository.findByVerifyToken(token);
-    if (!user) throw new Error('Unvalid token');
+    if (!user) throw new Error('Invalid token');
 
-    await userRepository.updateById(user._id, {
+    const updatedUser = await userRepository.updateById(user._id, {
         isActive: true,
         verifyToken: null,
     });
+
+    const jwtToken = generateToken(updatedUser._id, updatedUser.role);
+
+    return {
+        token: jwtToken,
+        user: {
+            id: updatedUser._id,
+            name: updatedUser.name,
+            role: updatedUser.role
+        }
+    };
 };
 
 const getById = async (id) => {
@@ -88,7 +106,7 @@ const toggleActive = async (id) => {
 
 const toggleFavourite = async (userId, publicationId) => {
     const user = await userRepository.findById(userId);
-    if (!user) throw new Error('Користувача не знайдено');
+    if (!user) throw new Error('User not found');
 
     const isFavourite = user.favourites
         .map(id => id.toString())
@@ -103,14 +121,14 @@ const toggleFavourite = async (userId, publicationId) => {
 
 const getFavourites = async (userId) => {
     const user = await userRepository.getFavourites(userId);
-    if (!user) throw new Error('Користувача не знайдено');
+    if (!user) throw new Error('User not found');
     return user.favourites;
 };
 
-// ─── helpers ─────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────
 
 const sendVerificationEmail = async (email, token) => {
-    const link = `http://localhost:5000/api/users/verify/${token}`;
+    const link = `http://localhost:5173/verify/${token}`;
 
     await transporter.sendMail({
         from: process.env.EMAIL_USER,
@@ -159,6 +177,6 @@ module.exports = {
     update,
     remove,
     toggleActive,
-    toggleFavourite, 
-    getFavourites,   
+    toggleFavourite,
+    getFavourites,
 };

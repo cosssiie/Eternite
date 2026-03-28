@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -10,6 +10,7 @@ import VerticalMarquee from "./components/VerticalMarquee";
 import ScrollManager from "./components/ScrollToTop";
 import AccountPage from "./pages/AccoutPage";
 import AdminPanelPage from "./pages/AdminPanelPage";
+import VerifyEmail from "./components/VerifyEmail";
 
 function App() {
   const location = useLocation();
@@ -38,11 +39,34 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const checkUserPersistence = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          await api.get('/users/me');
+        } catch (err) {
+          localStorage.clear();
+          window.location.href = '/signin';
+        }
+      }
+    };
+    checkUserPersistence();
+  }, []);
+
   const AdminRoute = ({ children }) => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (!user || user.role !== 'admin') {
       return <Navigate to="/" replace />;
+    }
+    return children;
+  };
+
+  const ProtectedRoute = ({ children }) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return <Navigate to="/signup" replace />;
     }
     return children;
   };
@@ -59,8 +83,23 @@ function App() {
               <Route path="/" element={<MainPage />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="/account" element={<AccountPage />} />
+              <Route path="/verify/:token" element={<VerifyEmail />} />
+              <Route path="*" element={<Navigate to="/" />} />
+
+              <Route
+                path="/gallery"
+                element={
+                  <ProtectedRoute>
+                    <GalleryPage />
+                  </ProtectedRoute>
+                } />
+              <Route
+                path="/account"
+                element={
+                  <ProtectedRoute>
+                    <AccountPage />
+                  </ProtectedRoute>
+                } />
               <Route
                 path="/admin-panel"
                 element={
