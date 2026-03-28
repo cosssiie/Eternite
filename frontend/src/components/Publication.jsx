@@ -1,10 +1,17 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Publication({ title, images = [], author }) {
+function Publication({ _id, title, images = [], author }) {
     const [isFavourite, setIsFavourite] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
-    
+
+    const navigate = useNavigate();
+
+    const handleCardClick = () => {
+        navigate(`/publication/${_id}`);
+    };
+
     const toggleFavourite = (e) => {
         e.stopPropagation();
         const adding = !isFavourite;
@@ -17,7 +24,7 @@ function Publication({ title, images = [], author }) {
 
     return (
         <>
-            <div className="publication-card">
+            <div className="publication-card" onClick={handleCardClick}>
                 <div className="publication-image-wrapper">
                     <img
                         src={images[0]}

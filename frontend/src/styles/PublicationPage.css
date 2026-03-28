@@ -1,0 +1,218 @@
+.publication-page-container {
+    width: 100%;
+    display: flex;
+    min-height: calc(100vh - 5rem);
+}
+
+.publication-image-section {
+    position: sticky;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 2.25rem;
+    overflow: hidden;
+}
+
+.image-slider {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.main-detail-image {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    display: block;
+}
+
+
+.slider-arrow {
+    position: absolute;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    padding: 0;
+}
+
+.prev {
+    left: 8px;
+}
+
+.next {
+    right: 8px;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 24px;
+    display: flex;
+    gap: 6px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--main-black-color);
+    opacity: 0.2;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.dot.active {
+    opacity: 1;
+}
+
+.publication-info-sidebar {
+    flex: 1;
+    padding: 3rem;
+    overflow-y: auto;
+}
+
+.sticky-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.detail-title {
+    color: var(--main-black-color);
+    margin: 0;
+}
+
+.detail-author {
+    color: var(--grey-color);
+    margin: 0;
+}
+
+.detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 0.5px solid #e0e0e0;
+}
+
+.favourite-btn-inline {
+    position: static;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.category-tag {
+    font-family: 'Termina Test', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--main-black-color);
+    border: 0.5px solid var(--main-black-color);
+    padding: 4px 12px;
+}
+
+.date-tag {
+    font-family: 'Termina Test', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--grey-color);
+}
+
+.detail-description p {
+    color: var(--main-black-color);
+    margin: 0;
+    padding-bottom: 24px;
+    border-bottom: 0.5px solid #e0e0e0;
+}
+
+.detail-attributes {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.attribute-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 0.5px solid #e0e0e0;
+}
+
+.attribute-label {
+    font-family: 'Termina Test', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey-color);
+}
+
+.attribute-value {
+    font-family: 'Termina Test', sans-serif;
+    font-size: 12px;
+    color: var(--main-black-color);
+}
+
+.full-screen-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    width: 100%;
+    text-align: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.custom-loader {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--main-black-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+.action-main-button {
+    border: none;
+    color: var(--main-white-color);
+    background-color: var(--main-black-color);
+    padding: 12px 32px;
+    cursor: pointer;
+    font-family: 'Termina Test', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    transition: opacity 0.2s ease;
+}
+
+.action-main-button:hover {
+    opacity: 0.8;
+}
+
+.error-message {
+    font-family: 'Termina Test', sans-serif;
+    letter-spacing: 3px;
+    color: var(--main-black-color);
+    text-transform: uppercase;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

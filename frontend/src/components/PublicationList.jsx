@@ -29,6 +29,7 @@ function PublicationList({ publications = [] }) {
                         {col.map((pub) => (
                             <Publication
                                 key={pub._id}
+                                _id={pub._id}
                                 title={pub.title}
                                 images={pub.images}
                                 author={pub.author}

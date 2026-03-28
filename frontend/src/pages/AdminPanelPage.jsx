@@ -5,7 +5,7 @@ function AdminPanelPage() {
 
     return (
         <div className="admin-page-container">
-            <TitleHeader title="Admin Panel" />
+            <TitleHeader title="Admin" />
 
             <div className="admin-container">
                

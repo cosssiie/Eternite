@@ -24,7 +24,15 @@ function App() {
   };
 
   const ProtectedRoute = ({ children }) => {
-    return isAuth ? children : <Navigate to="/signup" replace />;
+    const { isAuth, loading } = useAuth();
+    if (loading) {
+      return null;
+    }
+    if (!isAuth) {
+      return <Navigate to="/signup" replace />;
+    }
+
+    return children;
   };
 
   return (
