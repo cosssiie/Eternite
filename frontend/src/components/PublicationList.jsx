@@ -1,7 +1,33 @@
-import React from 'react';
-import Publication from './Publication.jsx';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { userApi } from '../api/userApi';
+import Publication from './Publication';
 
-function PublicationList({ publications = [] }) {
+function PublicationList({ publications }) {
+    const { isAuth } = useAuth();
+    const [favouriteIds, setFavouriteIds] = useState([]);
+
+    useEffect(() => {
+        const fetchFavourites = async () => {
+            if (!isAuth) return;
+            try {
+                const { data } = await userApi.getFavourites();
+                const ids = (data.favourites || []).map(f => String(f._id || f));
+                setFavouriteIds(ids);
+            } catch (err) {
+                console.error('Error fetching favourites:', err);
+            }
+        };
+        fetchFavourites();
+    }, [isAuth]);
+
+    const handleFavouriteChange = (pubId, isAdding) => {
+        setFavouriteIds(prev =>
+            isAdding
+                ? [...prev, String(pubId)]
+                : prev.filter(id => id !== String(pubId))
+        );
+    };
 
     if (publications.length === 0) {
         return (
@@ -13,9 +39,7 @@ function PublicationList({ publications = [] }) {
 
     const createColumns = (items, columnsCount) => {
         const columns = Array.from({ length: columnsCount }, () => []);
-        items.forEach((item, index) => {
-            columns[index % columnsCount].push(item);
-        });
+        items.forEach((item, index) => columns[index % columnsCount].push(item));
         return columns;
     };
 
@@ -33,6 +57,8 @@ function PublicationList({ publications = [] }) {
                                 title={pub.title}
                                 images={pub.images}
                                 author={pub.author}
+                                isFavourite={favouriteIds.includes(String(pub._id))}
+                                onFavouriteChange={handleFavouriteChange}
                             />
                         ))}
                     </div>

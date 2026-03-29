@@ -14,11 +14,11 @@ export const AuthProvider = ({ children }) => {
 
             if (token && savedUser) {
                 setUser(JSON.parse(savedUser));
-
                 try {
                     const { data } = await api.get('/users/me');
-                    setUser(data);
-                    localStorage.setItem('user', JSON.stringify(data));
+                    const userData = data.user || data;
+                    setUser(userData);
+                    localStorage.setItem('user', JSON.stringify(userData));
                 } catch (err) {
                     logout();
                 }
@@ -40,8 +40,44 @@ export const AuthProvider = ({ children }) => {
         window.location.href = '/';
     };
 
+    const refreshUser = async () => {
+        try {
+            const { data } = await api.get('/users/me');
+            setUser(data);
+            localStorage.setItem('user', JSON.stringify(data));
+        } catch (err) {
+            console.error('Error refreshing user:', err);
+        }
+    };
+
+    const updateFavouritesLocally = (publicationId, isAdding) => {
+        setUser(prevUser => {
+            if (!prevUser) return null;
+
+            const currentFavs = prevUser.favourites || [];
+            let newFavs;
+
+            if (isAdding) {
+                newFavs = currentFavs.includes(publicationId)
+                    ? currentFavs
+                    : [...currentFavs, publicationId];
+            } else {
+                newFavs = currentFavs.filter(id => String(id) !== String(publicationId));
+            }
+
+            const updatedUser = { ...prevUser, favourites: newFavs };
+
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+
+            return updatedUser;
+        });
+    };
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, isAuth: !!user, loading }}>
+        <AuthContext.Provider value={{
+            user, login, logout, isAuth: !!user, loading, refreshUser,
+            updateFavouritesLocally // передаем функцию в контекст
+        }}>
             {children}
         </AuthContext.Provider>
     );

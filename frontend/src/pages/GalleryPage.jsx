@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TitleHeader from '../components/TitleHeader.jsx';
 import PublicationList from '../components/PublicationList.jsx';
-import { publicationApi } from '../api/publicationApi';
+import { publicationApi } from '../api/PublicationApi';
 import { categoryApi } from '../api/categoryApi';
 
 function GalleryPage() {
