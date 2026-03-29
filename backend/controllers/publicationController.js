@@ -3,9 +3,18 @@ const publicationService = require('../services/publicationService');
 // всі публікації
 const getAll = async (req, res, next) => {
     try {
-        // req.query: ?status=approved&category=xxx&search=капелюх
-        const publications = await publicationService.getAll(req.query);
-        res.json({ success: true, publications });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const result = await publicationService.getAll({
+            ...req.query,
+            page,
+            limit
+        });
+        res.json({
+            success: true,
+            publications: result.publications,
+            total: result.total
+        });
     } catch (err) {
         next(err);
     }
@@ -27,7 +36,7 @@ const create = async (req, res, next) => {
         let images = [];
         if (req.files && req.files.length > 0) {
             images = req.files.map(file => file.path);
-        } 
+        }
         else if (req.file) {
             images = [req.file.path];
         }

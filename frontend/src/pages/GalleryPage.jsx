@@ -2,22 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TitleHeader from '../components/TitleHeader.jsx';
 import PublicationList from '../components/PublicationList.jsx';
+import Pagination from '../components/Pagination.jsx'; // Новый импорт
 import { publicationApi } from '../api/PublicationApi';
 import { categoryApi } from '../api/categoryApi';
+
 
 function GalleryPage() {
     const [publications, setPublications] = useState([]);
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const [searchParams] = useSearchParams();
     const categoryId = searchParams.get('category');
+    const pageSize = 12;
 
     useEffect(() => {
         const loadInitialData = async () => {
             try {
                 setIsLoading(true);
-                const params = {};
+                const params = {
+                    page: currentPage,
+                    limit: pageSize
+                };
                 if (categoryId && categoryId !== 'all') {
                     params.category = categoryId;
                 }
@@ -26,7 +34,11 @@ function GalleryPage() {
                     categoryApi.getTree()
                 ]);
 
-                setPublications(pubRes.data.publications || pubRes.data);
+                const allFetched = pubRes.data.publications || [];
+                const serverTotal = pubRes.data.total || 0;
+                setPublications(allFetched);
+
+                setTotalPages(Math.ceil(serverTotal / pageSize));
                 setCategories(catRes.data.tree || catRes.data);
 
             } catch (err) {
@@ -37,8 +49,12 @@ function GalleryPage() {
         };
 
         loadInitialData();
-    }, [categoryId]);
+    }, [categoryId, currentPage]);
 
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     return (
         <div className="gallery-page-container">
@@ -69,7 +85,14 @@ function GalleryPage() {
                 {isLoading ? (
                     <div className="main-loader" id="button">Loading collection...</div>
                 ) : (
-                    <PublicationList publications={publications} />
+                    <>
+                        <PublicationList publications={publications} />
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    </>
                 )}
             </div>
         </div>

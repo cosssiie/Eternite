@@ -1,10 +1,12 @@
 const publicationRepository = require('../repositories/publicationRepository');
 
-const getAll = ({ status, category, search } = {}) => {
-    return publicationRepository.findWithFilters({
+const getAll = async ({ status, category, search, page, limit } = {}) => {
+    return await publicationRepository.findWithFilters({
         status: status || 'approved',
         category,
         search,
+        page: parseInt(page),
+        limit: parseInt(limit)
     });
 };
 

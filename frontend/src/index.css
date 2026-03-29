@@ -13,6 +13,8 @@
 @import './styles/Menu.css';
 @import './styles/Account.css';
 @import './styles/PublicationPage.css';
+@import './styles/Pagination.css';
+
 
 * {
   margin: 0;

@@ -15,17 +15,25 @@ const findByAuthor = (authorId) =>
         .populate('category', 'name');
 
 // пошук + фільтрація
-const findWithFilters = ({ status, category, search }) => {
+const findWithFilters = async ({ status, category, search, page = 1, limit = 5 }) => {
     const query = {};
-
     if (status) query.status = status;
-    if (category) query.category = category;
+    if (category && category !== 'all') query.category = category;
     if (search) query.title = { $regex: search, $options: 'i' };
 
-    return Publication.find(query)
-        .populate('author', 'name email')
-        .populate('category', 'name')
-        .sort({ createdAt: -1 });
+    const skip = (page - 1) * limit;
+
+    const [publications, total] = await Promise.all([
+        Publication.find(query)
+            .populate('author', 'name email')
+            .populate('category', 'name')
+            .sort({ createdAt: -1, _id: -1 })
+            .skip(skip)
+            .limit(limit),
+        Publication.countDocuments(query)
+    ]);
+
+    return { publications, total };
 };
 
 const create = (data) => Publication.create(data);
