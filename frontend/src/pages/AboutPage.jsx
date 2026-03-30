@@ -37,16 +37,11 @@ function AboutPage() {
                     <div className="about-cell-text" id="text"></div>
                     <div className="about-cell-text" id="text">
                         <p>
-                            Curated by you, admired by the world.
-                            A minimalist frame for the artifacts that refuse to fade      Curated by you, admired by the world.
-                            A minimalist frame for the artifacts that refuse to fade...
-
+                            Éternité is more than a gallery; it is a curated sanctuary for those who seek beauty beyond the reach of time. We believe that true art isn’t just observed — it is preserved and carried forward.
+                            We stand for uncompromising authenticity, minimalist elegance, and the profound connection between the creator and the observer.
                         </p>
                         <p>
-                            Curated by you, admired by the world.
-                            A minimalist frame for the artifacts that refuse to fade      Curated by you, admired by the world.
-                            A minimalist frame for the artifacts that refuse to fade...
-
+                            We are eager to bridge the gap between contemporary vision and lasting legacy, providing a digital haven where inspiration never fades.
                         </p>
                     </div>
 
