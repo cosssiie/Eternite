@@ -1,0 +1,158 @@
+/* ── SETTINGS PAGE ── */
+.settings-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0rem 0 2rem;
+}
+
+.settings-section--row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    align-items: start;
+    padding: 2.5rem 0;
+}
+
+.settings-section-label {
+    padding-top: 2rem;
+    opacity: 0.45;
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+.settings-danger-label {
+    color: #8b2020;
+    opacity: 1 !important;
+}
+
+.settings-section-action {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.settings-hint {
+    font-size: 0.8rem;
+    opacity: 0.55;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.settings-divider {
+    width: 100%;
+    height: 0.5px;
+    background-color: var(--main-black-color);
+    opacity: 0.2;
+}
+
+/* ── FORM ── */
+.auth-form-settings {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group-settings {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0 1rem;
+    border-bottom: 0.5px solid var(--main-black-color);
+    width: 100%;
+}
+
+.form-group-settings input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    color: var(--main-black-color);
+    padding: 0;
+    margin: 0;
+}
+
+.settings-form-actions {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+
+/* ── GHOST BUTTON (sign out) ── */
+.settings-ghost-button {
+    background: transparent;
+    border: 0.5px solid var(--main-black-color);
+    color: var(--main-black-color);
+    padding: 0.85rem 1.75rem;
+    cursor: pointer;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    width: fit-content;
+    transition: transform 0.2s ease;
+}
+
+.settings-ghost-button:hover {
+    transform: translateY(-1px);
+}
+
+/* ── DANGER BUTTON ── */
+.settings-danger-button {
+    background: transparent;
+    border: 0.5px solid #8b2020;
+    color: #8b2020;
+    padding: 0.85rem 1.75rem;
+    cursor: pointer;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    width: fit-content;
+    transition: all 0.2s ease;
+    letter-spacing: 0.05em;
+}
+
+.settings-danger-button:hover {
+    background: #8b2020;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.settings-danger-button--confirm {
+    background: #8b2020;
+    color: #fff;
+}
+
+/* ── CONFIRM ROW ── */
+.settings-confirm-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.settings-confirm-text {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+}
+
+/* ── MESSAGE ── */
+.settings-message {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+}
+
+.settings-message.success {
+    color: #2d6a2d;
+}
+
+.settings-message.error {
+    color: #8b2020;
+}

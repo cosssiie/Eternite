@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import TitleHeader from "../components/TitleHeader";
 import PublicationList from "../components/PublicationList";
+import ProfileSettings from "../components/ProfileSettings";
 import { publicationApi } from "../api/PublicationApi";
 import { userApi } from "../api/userApi";
 
@@ -44,27 +45,25 @@ function AccountPage() {
     return (
         <div className="account-page-container">
             <TitleHeader title="Account" />
-
+            <div className="account-info">
+                <nav className="account-nav">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            className="acc-nav-link"
+                            id={activeTab === cat ? "nav-selected" : "nav"}
+                            onClick={() => handleTabChange(cat)}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </nav>
+            </div>
             <div className="account-container">
-                <div className="account-info">
-                    <nav className="account-nav">
-                        {categories.map((cat) => (
-                            <button
-                                key={cat}
-                                className="acc-nav-link"
-                                id={activeTab === cat ? "nav-selected" : "nav"}
-                                onClick={() => handleTabChange(cat)}
-                            >
-                                {cat}
-                            </button>
-                        ))}
-                    </nav>
-                </div>
-
                 <div className="account-content">
                     {activeTab === "My archive" && (
                         loading ? (
-                            <p className="loading-text" id="button">Loading archive...</p>
+                            <p className="main-loader" id="button">Loading archive...</p>
                         ) : (
                             <PublicationList publications={myPublications} />
                         )
@@ -72,20 +71,22 @@ function AccountPage() {
 
                     {activeTab === "Favorites" && (
                         loading ? (
-                            <p className="loading-text" id="button">Loading favorites...</p>
+                            <p className="main-loader" id="button">Loading favorites...</p>
                         ) : (
                             <PublicationList publications={favPublications} />
                         )
                     )}
 
                     {activeTab === "Settings" && (
-                        <div className="settings-placeholder">
-                            <p id="button">Profile settings will be here soon.</p>
-                        </div>
+                        loading ? (
+                            <p className="main-loader" id="button">Profile settings will be here soon...</p>
+                        ) : (
+                            <ProfileSettings />
+                        )
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
