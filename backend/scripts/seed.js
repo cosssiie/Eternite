@@ -511,7 +511,7 @@ const seed = async () => {
         favourites: [
             publications[1]._id,
             publications[4]._id,
-            publications[7]._id,
+            publications[6]._id,
         ]
     });
 

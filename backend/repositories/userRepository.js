@@ -39,15 +39,22 @@ const getFavourites = (userId) =>
             ]
         });
 
-module.exports = {
-    findByEmail,
-    findById,
-    findAll,
-    create,
-    updateById,
-    deleteById,
-    findByVerifyToken,
-    addToFavourites,
-    removeFromFavourites,
-    getFavourites,
-};
+const removePublicationFromAllFavourites = (publicationIds) =>
+    User.updateMany(
+        { favourites: { $in: publicationIds } },
+        { $pull: { favourites: { $in: publicationIds } } }
+    );
+
+    module.exports = {
+        findByEmail,
+        findById,
+        findAll,
+        create,
+        updateById,
+        deleteById,
+        findByVerifyToken,
+        addToFavourites,
+        removeFromFavourites,
+        getFavourites,
+        removePublicationFromAllFavourites
+    };

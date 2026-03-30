@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const userRepository = require('../repositories/userRepository');
+const publicationRepository = require('../repositories/publicationRepository');
+
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -94,8 +96,18 @@ const update = async (id, data) => {
 };
 
 const remove = async (id) => {
-    const user = await userRepository.deleteById(id);
+    const user = await userRepository.findById(id);
     if (!user) throw new Error('User is not found');
+
+    const publications = await publicationRepository.findManyByAuthor(id);
+    const publicationIds = publications.map(p => p._id);
+
+    if (publicationIds.length > 0) {
+        await userRepository.removePublicationFromAllFavourites(publicationIds);
+        await publicationRepository.deleteManyByAuthor(id);
+    }
+
+    await userRepository.deleteById(id);
 };
 
 const toggleActive = async (id) => {

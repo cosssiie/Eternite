@@ -15,6 +15,9 @@ const findByAuthor = (authorId) =>
         .populate('category', 'name')
         .populate('author', 'name');
 
+const findManyByAuthor = (authorId) =>
+    Publication.find({ author: authorId }, '_id')
+
 // пошук + фільтрація
 const findWithFilters = async ({ status, category, search, page = 1, limit = 5 }) => {
     const query = {};
@@ -44,12 +47,17 @@ const updateById = (id, data) =>
 
 const deleteById = (id) => Publication.findByIdAndDelete(id);
 
+const deleteManyByAuthor = (authorId) => Publication.deleteMany({ author: authorId });
+
+
 module.exports = {
     findAll,
     findById,
     findByAuthor,
+    findManyByAuthor,
     findWithFilters,
     create,
     updateById,
     deleteById,
+    deleteManyByAuthor,
 };

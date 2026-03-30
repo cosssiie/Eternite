@@ -18,6 +18,15 @@ const login = async (req, res, next) => {
     }
 };
 
+const deleteMe = async (req, res, next) => {
+    try {
+        await userService.remove(req.user.id);
+        res.json({ success: true, message: 'Account deleted successfully' });
+    } catch (err) {
+        next(err);
+    }
+};
+
 const verifyEmail = async (req, res, next) => {
     try {
         await userService.verifyEmail(req.params.token);
@@ -95,6 +104,7 @@ module.exports = {
     login,
     verifyEmail,
     getMe,
+    deleteMe,
     getAll,
     updateUser,
     deleteUser,

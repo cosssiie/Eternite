@@ -13,7 +13,7 @@ api.interceptors.request.use((config) => {
 });
 
 export const userApi = {
-    
+
     // public
 
     register: (data) => api.post('/register', data),
@@ -22,7 +22,7 @@ export const userApi = {
     getMe: () => api.get('/me'),
     toggleFavourite: (publicationId) => api.post(`/favourites/${publicationId}`),
     getFavourites: () => api.get('/favourites'),
-
+    deleteAccount: () => api.delete('/me'),
     // admin
 
     getAllUsers: () => api.get('/'),
