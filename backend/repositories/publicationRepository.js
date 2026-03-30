@@ -12,7 +12,8 @@ const findById = (id) =>
 
 const findByAuthor = (authorId) =>
     Publication.find({ author: authorId })
-        .populate('category', 'name');
+        .populate('category', 'name')
+        .populate('author', 'name');
 
 // пошук + фільтрація
 const findWithFilters = async ({ status, category, search, page = 1, limit = 5 }) => {

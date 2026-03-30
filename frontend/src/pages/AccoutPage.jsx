@@ -1,10 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import TitleHeader from "../components/TitleHeader";
+import PublicationList from "../components/PublicationList";
+import { publicationApi } from "../api/PublicationApi";
+import { userApi } from "../api/userApi";
 
 function AccountPage() {
-    const [activeTab, setActiveTab] = useState("My archive");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeTab = searchParams.get("tab") || "My archive";
+
+    const [myPublications, setMyPublications] = useState([]);
+    const [favPublications, setFavPublications] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const categories = ["My archive", "Favorites", "Settings"];
+
+    const handleTabChange = (tabName) => {
+        setSearchParams({ tab: tabName });
+    };
+
+    useEffect(() => {
+        const loadAccountData = async () => {
+            setLoading(true);
+            try {
+                if (activeTab === "My archive") {
+                    const { data } = await publicationApi.getMyPublications();
+                    setMyPublications(data.publications || []);
+                }
+                else if (activeTab === "Favorites") {
+                    const { data } = await userApi.getFavourites();
+                    setFavPublications(data.favourites || []);
+                }
+            } catch (err) {
+                console.error("Error loading account data:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadAccountData();
+    }, [activeTab]);
 
     return (
         <div className="account-page-container">
@@ -12,22 +47,43 @@ function AccountPage() {
 
             <div className="account-container">
                 <div className="account-info">
-                    <span className="account-username" id="nav">@username</span>
-
                     <nav className="account-nav">
                         {categories.map((cat) => (
                             <button
                                 key={cat}
                                 className="acc-nav-link"
                                 id={activeTab === cat ? "nav-selected" : "nav"}
-                                onClick={() => setActiveTab(cat)}
+                                onClick={() => handleTabChange(cat)}
                             >
                                 {cat}
                             </button>
                         ))}
                     </nav>
                 </div>
-                <div className="account-content"></div>
+
+                <div className="account-content">
+                    {activeTab === "My archive" && (
+                        loading ? (
+                            <p className="loading-text" id="button">Loading archive...</p>
+                        ) : (
+                            <PublicationList publications={myPublications} />
+                        )
+                    )}
+
+                    {activeTab === "Favorites" && (
+                        loading ? (
+                            <p className="loading-text" id="button">Loading favorites...</p>
+                        ) : (
+                            <PublicationList publications={favPublications} />
+                        )
+                    )}
+
+                    {activeTab === "Settings" && (
+                        <div className="settings-placeholder">
+                            <p id="button">Profile settings will be here soon.</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -33,7 +33,10 @@ const getFavourites = (userId) =>
     User.findById(userId)
         .populate({
             path: 'favourites',
-            populate: { path: 'category', select: 'name' }
+            populate: [
+                { path: 'category', select: 'name' },
+                { path: 'author', select: 'name' }
+            ]
         });
 
 module.exports = {

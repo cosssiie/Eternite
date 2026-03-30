@@ -1,6 +1,10 @@
 .account-container {
     margin-left: 2.25rem;
     padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .account-info {
@@ -9,13 +13,10 @@
     align-items: center;
 }
 
-.account-username {
-    color: var(--main-black-color);
-}
-
 .account-nav {
     display: flex;
     gap: 2.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .acc-nav-link {
