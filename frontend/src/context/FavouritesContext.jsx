@@ -25,7 +25,6 @@ export function FavouritesProvider({ children }) {
         const id = String(pubId);
         const isAdding = !favouriteIds.includes(id);
 
-        // оптимистичное обновление — сразу меняем UI
         setFavouriteIds(prev =>
             isAdding ? [...prev, id] : prev.filter(f => f !== id)
         );

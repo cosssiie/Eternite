@@ -36,9 +36,14 @@ export const userGql = {
 
     getFavourites: () => gqlRequest(`
         query {
-            favourites {
-                id title description images status
-                category { id name }
+            favourites { id title description images status
+                category { 
+                    id 
+                    name 
+                }
+                author {
+                    name
+                }
             }
         }
     `),

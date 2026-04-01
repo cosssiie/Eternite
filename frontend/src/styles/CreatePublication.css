@@ -1,0 +1,140 @@
+.create-page-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-container {
+    margin-left: 2.25rem;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.image-upload-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Отступ между полем загрузки и рядом фото внизу */
+}
+
+/* Поле загрузки всегда сверху (CSS без изменений) */
+.image-upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border: 0.5px solid var(--main-black-color);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.image-upload-placeholder:hover {
+    opacity: 0.6;
+}
+
+.image-previews {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+.preview-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* квадрат */
+    border: 0.5px solid #ddd;
+    overflow: hidden;
+}
+
+.preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Кнопка удаления (CSS без изменений) */
+.remove-image-btn {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    background: var(--main-black-color);
+    color: var(--main-white-color);
+    border: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* Сделаем круглой */
+}
+
+/* Кнопка "добавить еще" внутри ряда (CSS без изменений, но ширину зафиксировали) */
+.add-more-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    border: 0.5px solid var(--main-black-color);
+    cursor: pointer;
+    font-size: 1.5rem;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    /* Тоже делаем ее размером с превью */
+    width: 90px;
+    flex-shrink: 0;
+}
+
+.add-more-btn:hover {
+    opacity: 1;
+}
+
+/* ── Form ── */
+.create-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.create-textarea {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    color: var(--main-black-color);
+    resize: none;
+    width: 100%;
+    padding: 0;
+}
+
+.create-select {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-buttons);
+    font-size: var(--size-buttons);
+    color: var(--main-black-color);
+    width: 100%;
+    cursor: pointer;
+    appearance: none;
+}
+
+.template-fields {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+    .create-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}

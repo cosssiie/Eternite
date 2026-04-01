@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TitleHeader from '../components/TitleHeader.jsx';
 import PublicationList from '../components/PublicationList.jsx';
-import Pagination from '../components/Pagination.jsx'; // Новый импорт
-import { publicationApi } from '../api/PublicationApi';
+import Pagination from '../components/Pagination.jsx';
+import { publicationApi } from '../api/publicationApi';
 import { categoryApi } from '../api/categoryApi';
 
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import TitleHeader from "../components/TitleHeader";
 import PublicationList from "../components/PublicationList";
 import ProfileSettings from "../components/ProfileSettings";
-import { publicationApi } from "../api/PublicationApi";
-import { userApi } from "../api/userApi";
+import { publications } from "../api/Publication";
+import { users } from "../api/user";
 import { useFavourites } from '../context/FavouritesContext';
 
 function AccountPage() {
@@ -17,6 +17,7 @@ function AccountPage() {
     const [loading, setLoading] = useState(false);
 
     const categories = ["My archive", "Favorites", "Settings"];
+    const navigate = useNavigate();
 
     const handleTabChange = (tabName) => {
         setSearchParams({ tab: tabName });
@@ -27,11 +28,11 @@ function AccountPage() {
             setLoading(true);
             try {
                 if (activeTab === "My archive") {
-                    const { data } = await publicationApi.getMyPublications();
-                    setMyPublications(data.publications || []);
+                    const data = await publications.getMyPublications();
+                    setMyPublications(data);
                 } else if (activeTab === "Favorites") {
-                    const { data } = await userApi.getFavourites();
-                    setFavPublications(data.favourites || []);
+                    const data = await users.getFavourites();
+                    setFavPublications(data);
                 }
             } catch (err) {
                 console.error("Error loading account data:", err);
@@ -65,7 +66,15 @@ function AccountPage() {
                         loading ? (
                             <p className="main-loader" id="button">Loading archive...</p>
                         ) : (
-                            <PublicationList publications={myPublications} />
+                            <>
+                                <button className="submit-button" id="nav"
+                                    onClick={() => navigate('/publication/create')}
+                                    style={{ marginBottom: '2rem', marginTop: '2rem' }}>
+                                    + NEW PUBLICATION
+                                </button>
+                                <PublicationList publications={myPublications} />
+
+                            </>
                         )
                     )}
 
@@ -75,7 +84,7 @@ function AccountPage() {
                         ) : (
                             <PublicationList
                                 publications={favPublications.filter(pub =>
-                                    favouriteIds.includes(String(pub._id))
+                                    favouriteIds.includes(String(pub._id || pub.id))
                                 )}
                             />
                         )

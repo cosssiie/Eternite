@@ -13,6 +13,8 @@ import AccountPage from "./pages/AccoutPage";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import VerifyEmail from "./components/VerifyEmail";
 import PublicationPage from "./pages/PublicationPage";
+import CreatePublicationPage from './pages/CreatePublicationPage';
+
 
 function App() {
   const { user, isAuth, loading } = useAuth();
@@ -64,6 +66,14 @@ function App() {
                     <PublicationPage />
                   </ProtectedRoute>
                 } />
+              <Route
+                path="/publication/create"
+                element={
+                  <ProtectedRoute>
+                    <CreatePublicationPage />
+                  </ProtectedRoute>
+                } />
+
               <Route
                 path="/account"
                 element={

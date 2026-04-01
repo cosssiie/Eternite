@@ -33,7 +33,6 @@ export const categoryGql = {
     getTemplate: (id) => gqlRequest(`
         query {
             categoryTemplate(categoryId: "${id}") {
-                category { id name }
                 fields {
                     key label type required options
                 }

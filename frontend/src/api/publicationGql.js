@@ -26,8 +26,11 @@ export const publicationGql = {
     myPublications: () => gqlRequest(`
         query {
             myPublications {
-                id title description images status
-                category { id name }
+            id
+            title
+            images
+            status
+            author { name }
             }
         }
     `),

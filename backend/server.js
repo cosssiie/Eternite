@@ -5,6 +5,7 @@ const { Server } = require('socket.io');
 const { expressMiddleware } = require('@as-integrations/express4');
 const cors = require('cors');
 require('dotenv').config();
+const path = require('path');
 
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
@@ -36,7 +37,8 @@ const startServer = async () => {
   app.use(cors({ origin: 'http://localhost:5173' }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use('/uploads', express.static('uploads'));
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
   app.use('/graphql', expressMiddleware(apollo, {
     context: async ({ req }) => context({ req })
   }));

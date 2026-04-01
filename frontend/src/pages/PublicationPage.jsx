@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { publicationApi } from "../api/PublicationApi";
+import { publicationApi } from "../api/publicationApi";
 import { useAuth } from '../context/AuthContext';
 import { userApi } from '../api/userApi';
 
@@ -17,7 +17,6 @@ function PublicationPage() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
-    // 🔹 1. Загружаем публикацию
     useEffect(() => {
         const fetchPublication = async () => {
             try {
@@ -33,7 +32,6 @@ function PublicationPage() {
         if (id) fetchPublication();
     }, [id]);
 
-    // 🔹 2. Загружаем избранное с БД (ВАЖНО)
     useEffect(() => {
         const fetchFavourites = async () => {
             if (!isAuth) return;
@@ -63,8 +61,8 @@ function PublicationPage() {
         const adding = !isFavourite;
 
         try {
-            setIsFavourite(adding); // мгновенно
-            await userApi.toggleFavourite(id); // запрос в фоне
+            setIsFavourite(adding);
+            await userApi.toggleFavourite(id);
 
             setToastMessage(adding ? 'Added to favourites' : 'Removed from favourites');
             setShowToast(true);

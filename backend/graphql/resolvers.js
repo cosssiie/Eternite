@@ -3,6 +3,8 @@ const publicationService = require('../services/publicationService');
 const categoryRepository = require('../repositories/categoryRepository');
 const categoryService = require('../services/categoryService');
 const { GraphQLError } = require('graphql');
+const CategoryTemplate = require('../models/CategoryTemplate');
+const Publication = require('../models/Publication');
 
 const requireAuth = (user) => {
     if (!user) throw new GraphQLError('Unauthorized', {
@@ -40,7 +42,9 @@ module.exports = {
 
         myPublications: async (_, __, { user }) => {
             requireAuth(user);
-            return publicationService.getByAuthor(user.id);
+            return await Publication.find({ author: user.id })
+                .populate('author', 'name')
+                .populate('category', 'name');
         },
 
         favourites: async (_, __, { user }) => {
@@ -61,7 +65,11 @@ module.exports = {
         },
 
         categoryTemplate: async (_, { categoryId }) => {
-            return categoryService.getTemplate(categoryId);
+            const template = await CategoryTemplate.findOne({ category: categoryId })
+                .populate('category');
+
+            if (!template) return null;
+            return template;
         },
 
         users: async (_, __, { user }) => {
@@ -156,5 +164,15 @@ module.exports = {
 
     Publication: {
         id: (parent) => parent._id?.toString() || parent.id,
+
+        author: async (parent) => {
+            if (parent.author && parent.author.name) return parent.author;
+            return userService.getById(parent.author);
+        },
+
+        category: async (parent) => {
+            if (parent.category && parent.category.name) return parent.category;
+            return categoryService.getById(parent.category);
+        }
     },
 };

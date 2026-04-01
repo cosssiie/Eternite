@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { userApi } from '../api/userApi';
+import { useFavourites } from '../context/FavouritesContext';
 
-function Publication({ _id, title, images = [], author, isFavourite: initialFavourite = false, onFavouriteChange }) {
+function Publication({ _id, title, images = [], author }) {
     const navigate = useNavigate();
     const { isAuth } = useAuth();
+    const { favouriteIds, toggleFavourite } = useFavourites();
 
-    const [isFavourite, setIsFavourite] = useState(initialFavourite);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
-    // синхронизируем с пропом когда приходят данные с сервера
-    useEffect(() => {
-        setIsFavourite(initialFavourite);
-    }, [initialFavourite]);
+    const isFavourite = favouriteIds.includes(String(_id));
 
     const handleCardClick = () => navigate(`/publication/${_id}`);
 
-    const toggleFavourite = async (e) => {
+    const handleToggle = async (e) => {
         e.preventDefault();
         e.stopPropagation();
 
@@ -30,42 +27,36 @@ function Publication({ _id, title, images = [], author, isFavourite: initialFavo
         }
 
         const adding = !isFavourite;
+        await toggleFavourite(_id);
 
-        try {
-            setIsFavourite(adding); // мгновенно
-            onFavouriteChange?.(_id, adding); // обновляем список в родителе
-            await userApi.toggleFavourite(_id);
+        setToastMessage(adding ? 'Added to favourites' : 'Removed from favourites');
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2500);
+    };
 
-            setToastMessage(adding ? 'Added to favourites' : 'Removed from favourites');
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 2500);
-        } catch (err) {
-            setIsFavourite(!adding); // откат
-            onFavouriteChange?.(_id, !adding);
-            console.error("Error toggling favourite:", err);
-        }
+    const getImageUrl = (path) => {
+        if (!path) return '/src/assets/placeholder.jpg';
+        if (path.startsWith('http')) return path;
+        let cleanPath = path.replace(/\\/g, '/');
+        if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+        return `http://localhost:5000${cleanPath}`;
     };
 
     return (
         <>
             <div className="publication-card" onClick={handleCardClick}>
                 <div className="publication-image-wrapper">
-                    <img
-                        src={images[0]?.startsWith('http') ? images[0] : `http://localhost:5000${images[0]}`}
-                        alt={title}
-                        className="publication-image"
-                    />
+                    <img src={getImageUrl(images[0])} alt={title} className="publication-image" />
                     <div className="publication-overlay">
                         <button
                             type="button"
                             className={`favourite-btn ${isFavourite ? 'favourite-btn--active' : ''}`}
-                            onClick={toggleFavourite}
+                            onClick={handleToggle}
                         >
                             <img
                                 src={isFavourite
                                     ? '/src/assets/icons/favorites.svg'
-                                    : '/src/assets/icons/favorites-none.svg'
-                                }
+                                    : '/src/assets/icons/favorites-none.svg'}
                                 alt="favourite"
                             />
                         </button>

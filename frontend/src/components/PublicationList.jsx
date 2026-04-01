@@ -1,8 +1,6 @@
 import Publication from './Publication';
-import { useFavourites } from '../context/FavouritesContext';
 
 function PublicationList({ publications }) {
-    const { favouriteIds, toggleFavourite } = useFavourites();
 
     if (publications.length === 0) {
         return (
@@ -27,13 +25,11 @@ function PublicationList({ publications }) {
                     <div className="masonry-column" key={colIndex}>
                         {col.map((pub) => (
                             <Publication
-                                key={pub._id}
-                                _id={pub._id}
+                                key={pub._id || pub.id}
+                                _id={pub._id || pub.id}
                                 title={pub.title}
                                 images={pub.images}
                                 author={pub.author}
-                                isFavourite={favouriteIds.includes(String(pub._id))}
-                                onFavouriteChange={(id) => toggleFavourite(id)}
                             />
                         ))}
                     </div>

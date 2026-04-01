@@ -24,14 +24,14 @@ module.exports = gql`
 
     type Category {
         id: ID!
-        name: String!
+        name: String
         isActive: Boolean!
         parent: Category
         children: [Category]
     }
 
     type CategoryTemplate {
-        category: Category!
+        category: Category
         fields: [TemplateField]
     }
 
