@@ -16,7 +16,8 @@ module.exports = gql`
         description: String
         content: String
         images: [String]
-        status: String!
+        status: String
+        createdAt: String!
         author: User
         category: Category
         attributes: [Attribute]

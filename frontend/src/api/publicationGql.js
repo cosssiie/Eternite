@@ -4,7 +4,8 @@ export const publicationGql = {
     getAll: (status, categoryId) => gqlRequest(`
         query GetPublications($status: String, $categoryId: ID) {
             publications(status: $status, categoryId: $categoryId) {
-                id title description images status
+                id title description images status 
+                createdAt
                 author { id name }
                 category { id name }
                 attributes { key label value }
@@ -13,15 +14,25 @@ export const publicationGql = {
     `, { status, categoryId }),
 
     getById: (id) => gqlRequest(`
-        query {
-            publication(id: "${id}") {
-                id title description content images status
-                author { id name }
-                category { id name }
-                attributes { key label value }
+    query GetPublication($id: ID!) {
+        publication(id: $id) {
+            id title description content images status createdAt
+            author {
+                id
+                name
+            }
+            category {
+                id
+                name
+            }
+            attributes {
+                key
+                label
+                value
             }
         }
-    `),
+    }
+    `, { id }),
 
     myPublications: () => gqlRequest(`
         query {
