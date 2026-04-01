@@ -40,6 +40,7 @@ html {
   --font-headings: 'EthicNew', serif;
   --font-buttons: 'TerminaTest', sans-serif;
   --font-text: 'Archivo', sans-serif;
+  --font-italic: 'Alex Brush';
 
   --size-logo: 3rem;
   --size-h1: 5rem;

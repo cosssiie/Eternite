@@ -1,5 +1,7 @@
-#about, #faqs, #video {
-  scroll-margin-top: 5rem; 
+#about,
+#faqs,
+#video {
+    scroll-margin-top: 5rem;
 }
 
 .main-page-container {
@@ -12,6 +14,9 @@
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .video-container::after {
@@ -34,4 +39,74 @@
     height: 100%;
     object-fit: cover;
     z-index: -1;
+}
+
+.main-page-section {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 3rem;
+    margin-left: 2.25rem;
+}
+
+.side-label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: var(--main-white-color);
+    font-family: var(--font-logo);
+    font-size: 1rem;
+}
+
+.side-label--left {
+    left: 1.5rem;
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.side-label--right {
+    right: 1.5rem;
+}
+
+.main-page-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    color: var(--main-white-color);
+}
+
+.main-page-subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    opacity: 0.75;
+    margin: 0;
+}
+
+.main-page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-family: var(--font-buttons);
+    margin: 0;
+    font-weight: var(--fw-light);
+    text-transform: uppercase;
+}
+
+.main-page-title--italic {
+    font-family: var(--font-italic);
+    text-transform: none;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+}
+
+.main-page-bottom {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+    margin: 0;
 }

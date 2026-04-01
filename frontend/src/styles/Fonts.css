@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Viaoda+Libre&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Archivo:ital,wght@0,100..900;1,100..900&family=Viaoda+Libre&display=swap');
 
 @font-face {
   font-family: 'EthicNew';
@@ -12,6 +11,13 @@
   font-family: 'TerminaTest';
   src: url('/src/assets/fonts/TerminaTest-Regular.otf') format('opentype');
   font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TerminaTest';
+  src: url('/src/assets/fonts/TerminaTest-Light.otf') format('opentype');
+  font-weight: 300;
   font-style: normal;
 }
 
