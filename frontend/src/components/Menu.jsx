@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
-import { categoryApi } from "../api/categoryApi";
+import { categoriesService } from "../api/categories";
 import { useAuth } from "../context/AuthContext";
 
 function Menu({ isOpen, onClose }) {
@@ -17,10 +17,11 @@ function Menu({ isOpen, onClose }) {
             document.body.style.overflow = 'hidden';
             const fetchCats = async () => {
                 try {
-                    const res = await categoryApi.getTree();
-                    setCategories(res.data.tree || res.data);
+                    const data = await categoriesService.getTree();
+                    setCategories(data || []);
                 } catch (err) {
-                    console.error("Ошибка загрузки категорий в меню", err);
+                    console.error("Error loading categories in menu:", err);
+                    if (err.response) console.error("Server Response Error:", err.response.data);
                 }
             };
             fetchCats();
@@ -87,37 +88,43 @@ function Menu({ isOpen, onClose }) {
                             <div className="nav-link category-all" onClick={() => handleCategoryClick('all')}>
                                 <strong id="nav">All Gallery</strong>
                             </div>
-                            {categories.map(cat => (
-                                <div key={cat._id} className="nav-link" id="nav" onClick={() => {
-                                    setSelectedCategory(cat);
-                                    if (cat.children && cat.children.length > 0) {
-                                        setView("subcategories");
-                                    } else {
-                                        handleCategoryClick(cat._id);
-                                    }
-                                }}>
-                                    {cat.name}
-                                    {cat.children?.length > 0 && <img src="./src/assets/icons/arrow_right.svg" alt="arrow" />}
-                                </div>
-                            ))}
+                            {categories.map(cat => {
+                                const catId = cat.id || cat._id;
+                                return (
+                                    <div key={catId} className="nav-link" id="nav" onClick={() => {
+                                        setSelectedCategory(cat);
+                                        if (cat.children && cat.children.length > 0) {
+                                            setView("subcategories");
+                                        } else {
+                                            handleCategoryClick(catId);
+                                        }
+                                    }}>
+                                        {cat.name}
+                                        {cat.children?.length > 0 && <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />}
+                                    </div>
+                                );
+                            })}
                         </>
                     )}
 
                     {view === "subcategories" && selectedCategory && (
                         <>
-                            <div className="nav-link category-parent-all" onClick={() => handleCategoryClick(selectedCategory._id)}>
+                            <div className="nav-link category-parent-all"
+                                onClick={() => handleCategoryClick(selectedCategory.id || selectedCategory._id)}>
                                 <strong id="nav">All {selectedCategory.name}</strong>
                             </div>
-                            {selectedCategory.children.map(sub => (
-                                <div key={sub._id} className="nav-link" id="nav" onClick={() => handleCategoryClick(sub._id)}>
-                                    {sub.name}
-                                    {<img src="./src/assets/icons/arrow_right.svg" alt="arrow" />}
-
-                                </div>
-                            ))}
+                            {selectedCategory.children.map(sub => {
+                                const subId = sub.id || sub._id;
+                                return (
+                                    <div key={subId} className="nav-link" id="nav"
+                                        onClick={() => handleCategoryClick(subId)}>
+                                        {sub.name}
+                                        <img src="/src/assets/icons/arrow_right.svg" alt="arrow" />
+                                    </div>
+                                );
+                            })}
                         </>
                     )}
-
                 </nav>
             </section >
         </>,

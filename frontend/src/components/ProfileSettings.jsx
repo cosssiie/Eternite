@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { userApi } from '../api/userApi';
+import { users } from '../api/user';
 import { useNavigate } from 'react-router-dom';
 
 function ProfileSettings() {
@@ -40,8 +40,10 @@ function ProfileSettings() {
         }
 
         try {
-            const { data } = await userApi.updateProfile(formData);
-            login(data.user || data, localStorage.getItem('token'));
+            const updatedUser = await users.updateProfile(formData);
+
+            login(updatedUser, localStorage.getItem('token'));
+
             setFormData(prev => ({
                 ...prev,
                 currentPassword: '',
@@ -51,6 +53,7 @@ function ProfileSettings() {
             setMessage({ type: 'success', text: 'Profile updated successfully' });
             setTimeout(() => setMessage({ type: '', text: '' }), 3000);
         } catch (err) {
+            console.error(err);
             setMessage({ type: 'error', text: err.response?.data?.message || 'Update failed' });
         }
     };
@@ -62,7 +65,7 @@ function ProfileSettings() {
 
     const handleDeleteAccount = async () => {
         try {
-            await userApi.deleteAccount();
+            await users.deleteMe();
             logout();
             navigate('/');
         } catch (err) {

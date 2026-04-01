@@ -9,7 +9,7 @@ const rest = {
     },
     getTree: async () => {
         const { data } = await categoryApi.getTree();
-        return data.tree || [];
+        return data.tree || data;
     },
     getById: async (id) => {
         const { data } = await categoryApi.getById(id);
@@ -49,13 +49,15 @@ const graphql = {
         const data = await categoryGql.getTemplate(id);
         return data.categoryTemplate;
     },
-    create: async ({ name, parent }) => {
-        const data = await categoryGql.create(name, parent);
-        return data.createCategory;
+    create: async (data) => {
+        const { name, parent, parentId } = data;
+        const result = await categoryGql.create(name, parentId || parent);
+        return result.createCategory;
     },
-    update: async (id, { name, parent }) => {
-        const data = await categoryGql.update(id, name, parent);
-        return data.updateCategory;
+    update: async (id, data) => {
+        const { name, parent, parentId } = data;
+        const result = await categoryGql.update(id, name, parentId || parent);
+        return result.updateCategory;
     },
     remove: async (id) => {
         await categoryGql.remove(id);
@@ -70,4 +72,4 @@ const graphql = {
     },
 };
 
-export const categories = API_MODE === 'graphql' ? graphql : rest;
+export const categoriesService = API_MODE === 'graphql' ? graphql : rest;
