@@ -27,6 +27,15 @@ const deleteMe = async (req, res, next) => {
     }
 };
 
+const updateMe = async (req, res, next) => {
+    try {
+        const user = await userService.update(req.user.id, req.body);
+        res.json({ success: true, user });
+    } catch (err) {
+        next(err);
+    }
+};
+
 const verifyEmail = async (req, res, next) => {
     try {
         await userService.verifyEmail(req.params.token);
@@ -104,6 +113,7 @@ module.exports = {
     login,
     verifyEmail,
     getMe,
+    updateMe,
     deleteMe,
     getAll,
     updateUser,

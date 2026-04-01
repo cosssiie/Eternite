@@ -89,10 +89,23 @@ const getById = async (id) => {
 
 const getAll = () => userRepository.findAll();
 
-const update = async (id, data) => {
-    const user = await userRepository.updateById(id, data);
+const update = async (id, { name, email, currentPassword, newPassword }) => {
+    const user = await userRepository.findByIdWithPassword(id);
     if (!user) throw new Error('User is not found');
-    return user;
+
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+
+    if (newPassword) {
+        if (!currentPassword) throw new Error('Current password is required');
+        const match = await bcrypt.compare(currentPassword, user.password);
+        if (!match) throw new Error('Current password is incorrect');
+        updateData.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updated = await userRepository.updateById(id, updateData);
+    return updated;
 };
 
 const remove = async (id) => {

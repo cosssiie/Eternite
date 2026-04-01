@@ -20,11 +20,12 @@ export const userApi = {
     login: (data) => api.post('/login', data),
     verifyEmail: (token) => api.get(`/verify/${token}`),
     getMe: () => api.get('/me'),
+    updateProfile: (data) => api.put('/me', data),
     toggleFavourite: (publicationId) => api.post(`/favourites/${publicationId}`),
     getFavourites: () => api.get('/favourites'),
     deleteAccount: () => api.delete('/me'),
-    // admin
 
+    // admin
     getAllUsers: () => api.get('/'),
     updateUser: (id, data) => api.put(`/${id}`, data),
     deleteUser: (id) => api.delete(`/${id}`),
