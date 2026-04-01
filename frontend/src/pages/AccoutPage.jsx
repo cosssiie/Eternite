@@ -5,8 +5,10 @@ import PublicationList from "../components/PublicationList";
 import ProfileSettings from "../components/ProfileSettings";
 import { publicationApi } from "../api/PublicationApi";
 import { userApi } from "../api/userApi";
+import { useFavourites } from '../context/FavouritesContext';
 
 function AccountPage() {
+    const { favouriteIds } = useFavourites();
     const [searchParams, setSearchParams] = useSearchParams();
     const activeTab = searchParams.get("tab") || "My archive";
 
@@ -27,8 +29,7 @@ function AccountPage() {
                 if (activeTab === "My archive") {
                     const { data } = await publicationApi.getMyPublications();
                     setMyPublications(data.publications || []);
-                }
-                else if (activeTab === "Favorites") {
+                } else if (activeTab === "Favorites") {
                     const { data } = await userApi.getFavourites();
                     setFavPublications(data.favourites || []);
                 }
@@ -38,7 +39,6 @@ function AccountPage() {
                 setLoading(false);
             }
         };
-
         loadAccountData();
     }, [activeTab]);
 
@@ -73,7 +73,11 @@ function AccountPage() {
                         loading ? (
                             <p className="main-loader" id="button">Loading favorites...</p>
                         ) : (
-                            <PublicationList publications={favPublications} />
+                            <PublicationList
+                                publications={favPublications.filter(pub =>
+                                    favouriteIds.includes(String(pub._id))
+                                )}
+                            />
                         )
                     )}
 

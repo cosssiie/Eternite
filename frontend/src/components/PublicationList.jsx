@@ -1,33 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { userApi } from '../api/userApi';
 import Publication from './Publication';
+import { useFavourites } from '../context/FavouritesContext';
 
 function PublicationList({ publications }) {
-    const { isAuth } = useAuth();
-    const [favouriteIds, setFavouriteIds] = useState([]);
-
-    useEffect(() => {
-        const fetchFavourites = async () => {
-            if (!isAuth) return;
-            try {
-                const { data } = await userApi.getFavourites();
-                const ids = (data.favourites || []).map(f => String(f._id || f));
-                setFavouriteIds(ids);
-            } catch (err) {
-                console.error('Error fetching favourites:', err);
-            }
-        };
-        fetchFavourites();
-    }, [isAuth]);
-
-    const handleFavouriteChange = (pubId, isAdding) => {
-        setFavouriteIds(prev =>
-            isAdding
-                ? [...prev, String(pubId)]
-                : prev.filter(id => id !== String(pubId))
-        );
-    };
+    const { favouriteIds, toggleFavourite } = useFavourites();
 
     if (publications.length === 0) {
         return (
@@ -58,7 +33,7 @@ function PublicationList({ publications }) {
                                 images={pub.images}
                                 author={pub.author}
                                 isFavourite={favouriteIds.includes(String(pub._id))}
-                                onFavouriteChange={handleFavouriteChange}
+                                onFavouriteChange={(id) => toggleFavourite(id)}
                             />
                         ))}
                     </div>
