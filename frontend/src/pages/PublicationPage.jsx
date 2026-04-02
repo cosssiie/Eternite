@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { publicationApi } from "../api/publicationApi";
 import { useAuth } from '../context/AuthContext';
-import { userApi } from '../api/userApi';
+import { useFavourites } from '../context/FavouritesContext';
+import { publications } from '../api/Publication';
+import { users } from '../api/user';
 
 function PublicationPage() {
     const { id } = useParams();
     const { isAuth } = useAuth();
     const navigate = useNavigate();
+    const { favouriteIds, toggleFavourite: toggleFavInContext } = useFavourites();
 
     const [publication, setPublication] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    const [isFavourite, setIsFavourite] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
+    const isFavourite = favouriteIds.includes(String(id));
+
     useEffect(() => {
         const fetchPublication = async () => {
+            if (!id || id === 'undefined') return;
             try {
-                const { data } = await publicationApi.getById(id);
-                setPublication(data.publication || data);
+                setLoading(true);
+                const data = await publications.getById(id);
+                setPublication(data);
+                console.log('setPublication(data)', data);
             } catch (err) {
                 console.error("Ошибка при загрузке публикации", err);
             } finally {
@@ -29,28 +35,11 @@ function PublicationPage() {
             }
         };
 
-        if (id) fetchPublication();
+        fetchPublication();
     }, [id]);
 
-    useEffect(() => {
-        const fetchFavourites = async () => {
-            if (!isAuth) return;
-            try {
-                const { data } = await userApi.getFavourites();
-                const favourites = data.favourites || [];
-                const found = favourites.some(fav => String(fav._id || fav) === String(id));
-                setIsFavourite(found);
-            } catch (err) {
-                console.error("Ошибка при получении избранного", err);
-            }
-        };
-        fetchFavourites();
-    }, [id, isAuth]);
 
-    const toggleFavourite = async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
+    const handleToggleFavourite = async (e) => {
         if (!isAuth) {
             setToastMessage('Please sign in to add to favourites');
             setShowToast(true);
@@ -58,19 +47,43 @@ function PublicationPage() {
             return;
         }
 
-        const adding = !isFavourite;
-
         try {
-            setIsFavourite(adding);
-            await userApi.toggleFavourite(id);
+            const adding = !isFavourite;
+            await toggleFavInContext(id);
 
             setToastMessage(adding ? 'Added to favourites' : 'Removed from favourites');
             setShowToast(true);
             setTimeout(() => setShowToast(false), 2500);
         } catch (err) {
-            setIsFavourite(!adding); // откат если ошибка
             console.error("Error updating favourites:", err);
         }
+    };
+
+    const handleDelete = async () => {
+        if (!window.confirm("Are you sure you want to delete this publication?")) return;
+
+        try {
+            await publications.remove(id);
+
+            setToastMessage('Publication deleted successfully');
+            setShowToast(true);
+            setTimeout(() => {
+                navigate(-1);
+            }, 1000);
+        } catch (err) {
+            console.error("Error deleting publication:", err);
+            setToastMessage('Failed to delete publication');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 2500);
+        }
+    };
+
+    const getImageUrl = (path) => {
+        if (!path) return '/src/assets/placeholder.jpg';
+        if (path.startsWith('http')) return path;
+        let cleanPath = path.replace(/\\/g, '/');
+        if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+        return `http://localhost:5000${cleanPath}`;
     };
 
     if (loading) {
@@ -94,7 +107,7 @@ function PublicationPage() {
         );
     }
 
-    const { title, images, author, description, category, createdAt, attributes } = publication;
+    const { title, images = [], author, description, category, createdAt, attributes } = publication;
     const authorName = author?.name || (typeof author === 'string' ? author : 'Unknown');
     const categoryName = category?.name || (typeof category === 'string' ? category : null);
 
@@ -105,28 +118,26 @@ function PublicationPage() {
         <div className="publication-page-container">
             <div className="publication-image-section">
                 <div className="image-slider">
-                    {images?.length > 1 && (
+                    {images.length > 1 && (
                         <button type="button" className="slider-arrow prev" onClick={prevImage}>
                             <img src="/src/assets/icons/imple-arrow-left.svg" alt="prev" />
                         </button>
                     )}
 
                     <img
-                        src={images?.[currentImageIndex]?.startsWith('http')
-                            ? images[currentImageIndex]
-                            : `http://localhost:5000${images?.[currentImageIndex]}`}
+                        src={getImageUrl(images[currentImageIndex])}
                         alt={title}
                         className="main-detail-image"
                     />
 
-                    {images?.length > 1 && (
+                    {images.length > 1 && (
                         <button type="button" className="slider-arrow next" onClick={nextImage}>
                             <img src="/src/assets/icons/imple-arrow-right.svg" alt="next" />
                         </button>
                     )}
                 </div>
 
-                {images?.length > 1 && (
+                {images.length > 1 && (
                     <div className="slider-dots">
                         {images.map((_, idx) => (
                             <span
@@ -145,30 +156,50 @@ function PublicationPage() {
                     <p className="detail-author" id="button">@{authorName}</p>
 
                     <div className="detail-meta">
-                        {categoryName && <span className="category-tag">{categoryName}</span>}
+                        <div className="detail-info">
+                            {categoryName && <span className="category-tag">{categoryName}</span>}
+                            <span className="date-tag">
+                                {createdAt && !isNaN(Number(createdAt))
+                                    ? new Date(Number(createdAt)).toLocaleDateString('en-GB', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })
+                                    : createdAt ? new Date(createdAt).toLocaleDateString('en-GB', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    }) : 'Date unknown'
+                                }
+                            </span>
+                        </div>
 
-                        <span className="date-tag">
-                            {createdAt
-                                ? new Date(createdAt).toLocaleDateString('en-GB', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric'
-                                })
-                                : 'Date unknown'}
-                        </span>
+                        <div className="edit-publication-section">
+                            <button
+                                type="button"
+                                className={`favourite-btn-inline ${isFavourite ? 'favourite-btn--active' : ''}`}
+                                onClick={handleToggleFavourite}
+                            >
+                                <img
+                                    src={isFavourite
+                                        ? '/src/assets/icons/favorites.svg'
+                                        : '/src/assets/icons/favorites-none.svg'}
+                                    alt="favourite"
+                                />
+                            </button>
 
-                        <button
-                            type="button"
-                            className={`favourite-btn-inline ${isFavourite ? 'favourite-btn--active' : ''}`}
-                            onClick={toggleFavourite}
-                        >
-                            <img
-                                src={isFavourite
-                                    ? '/src/assets/icons/favorites.svg'
-                                    : '/src/assets/icons/favorites-none.svg'}
-                                alt="favourite"
-                            />
-                        </button>
+                            <button type="button" className="edit-btn-inline">
+                                <img src="/src/assets/icons/edit.svg" alt="edit" />
+                            </button>
+
+                            <button
+                                type="button"
+                                className="delete-btn-inline"
+                                onClick={handleDelete}
+                            >
+                                <img src="/src/assets/icons/delete.svg" alt="delete" />
+                            </button>
+                        </div>
                     </div>
 
                     {description && (

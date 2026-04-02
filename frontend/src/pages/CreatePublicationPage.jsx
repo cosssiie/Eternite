@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { categoriesService } from '../api/categories'; // Используем наш прокси-сервис
-import { publications } from '../api/Publication'; // Используем прокси публикаций
+import { categoriesService } from '../api/categories';
+import { publications } from '../api/Publication';
 import TitleHeader from '../components/TitleHeader.jsx';
 
 function CreatePublicationPage() {
@@ -128,7 +128,6 @@ function CreatePublicationPage() {
             <div className="create-container">
                 <div className="create-left">
                     <div className="image-upload-area">
-                        {/* ОДНА БОЛЬШАЯ КНОПКА ВСЕГДА СВЕРХУ */}
                         <label className="image-upload-placeholder">
                             <input type="file" multiple accept="image/*" onChange={handleImages} hidden />
                             <span id="nav">+ ADD IMAGES</span>
