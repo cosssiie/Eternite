@@ -26,12 +26,14 @@ module.exports = {
             return userService.getById(user.id);
         },
 
-        publications: async (_, { status, categoryId }) => {
+        publications: async (_, { status, categoryId, page = 1, limit = 12 }) => {
             const filters = {};
             if (status) filters.status = status;
             if (categoryId && categoryId !== 'undefined' && categoryId !== 'all') {
                 filters.category = categoryId;
             }
+            filters.page = page;
+            filters.limit = limit;
             const result = await publicationService.getAll(filters);
             return result.publications || result;
         },
@@ -156,6 +158,21 @@ module.exports = {
         saveCategoryTemplate: async (_, { categoryId, fields }, { user }) => {
             requireAdmin(user);
             return categoryService.saveTemplate(categoryId, fields);
+        },
+
+        approvePublication: async (_, { id }, { user }) => {
+            requireAdmin(user);
+            return publicationService.approve(id);
+        },
+
+        rejectPublication: async (_, { id, reason }, { user }) => {
+            requireAdmin(user);
+            return publicationService.reject(id, reason);
+        },
+
+        togglePublicationActive: async (_, { id }, { user }) => {
+            requireAdmin(user);
+            return publicationService.toggleActive(id);
         },
     },
     Category: {

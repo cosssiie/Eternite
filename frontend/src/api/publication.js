@@ -25,7 +25,12 @@ const rest = {
 
 const graphql = {
     getAll: async (params) => {
-        const data = await publicationGql.getAll(params?.status, params?.categoryId);
+        const data = await publicationGql.getAll(
+            params?.status,
+            params?.categoryId,
+            params?.page || 1,
+            params?.limit || 12
+        );
         return data.publications || [];
     },
     getById: async (id) => {

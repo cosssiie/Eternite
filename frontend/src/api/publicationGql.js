@@ -1,17 +1,17 @@
 import { gqlRequest } from './graphqlClient';
 
 export const publicationGql = {
-    getAll: (status, categoryId) => gqlRequest(`
-        query GetPublications($status: String, $categoryId: ID) {
-            publications(status: $status, categoryId: $categoryId) {
-                id title description images status content
+    getAll: (status, categoryId, page = 1, limit = 12) => gqlRequest(`
+    query GetPublications($status: String, $categoryId: ID, $page: Int, $limit: Int) {
+        publications(status: $status, categoryId: $categoryId, page: $page, limit: $limit) {
+               id title description images status content
                 createdAt
                 author { id name }
                 category { id name }
                 attributes { key label value }
-            }
         }
-    `, { status, categoryId }),
+    }
+`, { status, categoryId, page, limit }),
 
     getById: (id) => gqlRequest(`
     query GetPublication($id: ID!) {

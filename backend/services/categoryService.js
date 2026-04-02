@@ -1,11 +1,16 @@
 const categoryRepository = require('../repositories/categoryRepository');
+const Publication = require('../models/Publication');
 
 const getTree = async () => {
     const roots = await categoryRepository.findRoots();
 
     const tree = await Promise.all(roots.map(async (root) => {
         const children = await categoryRepository.findChildren(root._id);
-        return { ...root.toObject(), children };
+        const childrenWithParent = children.map(child => ({
+            ...child.toObject(),
+            parent: { _id: root._id, id: root._id.toString(), name: root.name }
+        }));
+        return { ...root.toObject(), children: childrenWithParent };
     }));
 
     return tree;
@@ -28,6 +33,18 @@ const update = async (id, data) => {
 };
 
 const remove = async (id) => {
+    const pubCount = await Publication.countDocuments({ category: id });
+    if (pubCount > 0) {
+        throw new Error(`Cannot delete: category has ${pubCount} publication(s)`);
+    }
+    const children = await categoryRepository.findChildren(id);
+    for (const child of children) {
+        const childPubCount = await Publication.countDocuments({ category: child._id });
+        if (childPubCount > 0) {
+            throw new Error(`Cannot delete: subcategory "${child.name}" has ${childPubCount} publication(s)`);
+        }
+    }
+
     const category = await categoryRepository.deleteById(id);
     if (!category) throw new Error('Категорію не знайдено');
 };

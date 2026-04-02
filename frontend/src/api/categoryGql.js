@@ -16,6 +16,7 @@ export const categoryGql = {
                 id name isActive
                 children {
                     id name isActive
+                    parent { id name }
                 }
             }
         }

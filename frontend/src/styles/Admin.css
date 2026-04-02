@@ -1,0 +1,131 @@
+.admin-container {
+    margin-left: 2.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-info {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 2rem;
+    border-bottom: 0.5px solid var(--main-black-color);
+    margin-bottom: 2.5rem;
+}
+
+.admin-content {
+    padding: 0 2rem 4rem;
+}
+
+/* ── Publications ── */
+.admin-pub-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 0.5px solid var(--main-black-color);
+    align-items: center;
+}
+
+.admin-pub-image {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+}
+
+.admin-pub-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.admin-pub-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.admin-pub-title {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.admin-pub-author {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    margin: 0;
+}
+
+.admin-pub-desc {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin: 0;
+}
+
+.admin-pub-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* ── Modal ── */
+.admin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-modal {
+    background: var(--main-white-color);
+    padding: 3rem;
+    width: min(500px, 90vw);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin-modal-title {
+    margin-bottom: 1rem;
+}
+
+.admin-modal-hint {
+    font-size: 0.75rem;
+    opacity: 0.5;
+    margin: 0.5rem 0;
+}
+
+/* ── Categories ── */
+.admin-cat-group {
+    margin-bottom: 0.5rem;
+}
+
+.admin-cat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 0;
+    border-bottom: 0.5px solid var(--main-black-color);
+    opacity: 1;
+}
+
+.admin-cat-item--child {
+    padding-left: 2rem;
+    opacity: 0.85;
+}
+
+.admin-cat-name {
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.admin-cat-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}

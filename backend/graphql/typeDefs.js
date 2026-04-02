@@ -65,7 +65,7 @@ module.exports = gql`
 
     type Query {
         me: User
-        publications(status: String, categoryId: ID): [Publication]
+        publications(status: String, categoryId: ID, page: Int, limit: Int): [Publication]
         publication(id: ID!): Publication
         myPublications: [Publication]
         favourites: [Publication]
@@ -94,5 +94,8 @@ module.exports = gql`
         # admin
         deleteUser(id: ID!): Boolean
         toggleUserStatus(id: ID!): User
+        approvePublication(id: ID!): Publication
+        rejectPublication(id: ID!, reason: String): Publication
+        togglePublicationActive(id: ID!): Publication
     }
 `;

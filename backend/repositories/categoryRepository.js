@@ -9,7 +9,8 @@ const findById = (id) => Category.findById(id);
 
 const findRoots = () => Category.find({ parent: null, isActive: true });
 
-const findChildren = (parentId) => Category.find({ parent: parentId, isActive: true });
+const findChildren = (parentId) =>
+    Category.find({ parent: parentId, isActive: true }).populate('parent');
 
 const create = (data) => Category.create(data);
 
