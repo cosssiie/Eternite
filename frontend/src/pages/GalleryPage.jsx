@@ -3,12 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import TitleHeader from '../components/TitleHeader.jsx';
 import PublicationList from '../components/PublicationList.jsx';
 import Pagination from '../components/Pagination.jsx';
-import { publicationApi } from '../api/publicationApi';
-import { categoryApi } from '../api/categoryApi';
-
+import { publications } from '../api/Publication';
+import { categoriesService } from '../api/categories';
 
 function GalleryPage() {
-    const [publications, setPublications] = useState([]);
+    const [pubs, setPubs] = useState([]);
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,36 +18,35 @@ function GalleryPage() {
     const pageSize = 12;
 
     useEffect(() => {
-        const loadInitialData = async () => {
+        setCurrentPage(1);
+    }, [categoryId]);
+
+    useEffect(() => {
+        const load = async () => {
+            setIsLoading(true);
             try {
-                setIsLoading(true);
                 const params = {
                     page: currentPage,
-                    limit: pageSize
+                    limit: pageSize,
                 };
                 if (categoryId && categoryId !== 'all') {
-                    params.category = categoryId;
+                    params.categoryId = categoryId;
                 }
-                const [pubRes, catRes] = await Promise.all([
-                    publicationApi.getAll(params),
-                    categoryApi.getTree()
+
+                const [pubData, catData] = await Promise.all([
+                    publications.getAll(params),
+                    categoriesService.getTree(),
                 ]);
 
-                const allFetched = pubRes.data.publications || [];
-                const serverTotal = pubRes.data.total || 0;
-                setPublications(allFetched);
-
-                setTotalPages(Math.ceil(serverTotal / pageSize));
-                setCategories(catRes.data.tree || catRes.data);
-
+                setPubs(pubData);
+                setCategories(catData);
             } catch (err) {
                 console.error("Error loading gallery:", err);
             } finally {
                 setIsLoading(false);
             }
         };
-
-        loadInitialData();
+        load();
     }, [categoryId, currentPage]);
 
     const handlePageChange = (newPage) => {
@@ -63,30 +61,22 @@ function GalleryPage() {
                 <div className="filter-search-container">
                     <div className="search-bar-content">
                         <button className="filter-button">
-                            <img
-                                src="./src/assets/icons/filter.svg"
-                                alt="Filter icon"
-                                className="filter-icon-img"
-                            />
+                            <img src="./src/assets/icons/filter.svg" alt="Filter icon" className="filter-icon-img" />
                         </button>
-
                         <div className="search-input-wrapper">
                             <input id="button" type="text" placeholder="SEARCH" className="search-input" />
                             <button className="search-submit">
-                                <img
-                                    src="./src/assets/icons/search.svg"
-                                    alt="Search icon"
-                                    className="search-icon-img"
-                                />
+                                <img src="./src/assets/icons/search.svg" alt="Search icon" className="search-icon-img" />
                             </button>
                         </div>
                     </div>
                 </div>
+
                 {isLoading ? (
                     <div className="main-loader" id="button">Loading collection...</div>
                 ) : (
                     <>
-                        <PublicationList publications={publications} />
+                        <PublicationList publications={pubs} />
                         <Pagination
                             currentPage={currentPage}
                             totalPages={totalPages}
