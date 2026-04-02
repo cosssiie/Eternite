@@ -65,7 +65,7 @@ module.exports = gql`
 
     type Query {
         me: User
-        publications(status: String, categoryId: ID, page: Int, limit: Int): [Publication]
+        publications(status: String, categoryId: ID, page: Int, limit: Int, search: String): [Publication]
         publication(id: ID!): Publication
         myPublications: [Publication]
         favourites: [Publication]

@@ -29,7 +29,8 @@ const graphql = {
             params?.status,
             params?.categoryId,
             params?.page || 1,
-            params?.limit || 12
+            params?.limit || 12,
+            params?.search || undefined
         );
         return data.publications || [];
     },

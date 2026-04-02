@@ -26,12 +26,13 @@ module.exports = {
             return userService.getById(user.id);
         },
 
-        publications: async (_, { status, categoryId, page = 1, limit = 12 }) => {
+        publications: async (_, { status, categoryId, page = 1, limit = 12, search }) => {
             const filters = {};
             if (status) filters.status = status;
             if (categoryId && categoryId !== 'undefined' && categoryId !== 'all') {
                 filters.category = categoryId;
             }
+            if (search) filters.search = search;
             filters.page = page;
             filters.limit = limit;
             const result = await publicationService.getAll(filters);

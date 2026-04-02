@@ -1,80 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect, } from 'react';
 import { useSocket } from '../context/SocketContext';
 import TitleHeader from '../components/TitleHeader.jsx';
 import PublicationList from '../components/PublicationList.jsx';
 import Pagination from '../components/Pagination.jsx';
-import { publications } from '../api/Publication';
-import { categoriesService } from '../api/categories';
+import { useGalleryFilters } from '../hooks/useGalleryFilters';
 
 function GalleryPage() {
     const socket = useSocket();
 
-    const [pubs, setPubs] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const {
+        pubs,
+        categories,
+        isLoading,
+        currentPage,
+        totalPages,
+        categoryId,
+        searchQuery,
+        setSearch,
+        setPage,
+        reload,
+    } = useGalleryFilters(12);
 
-    const [searchParams] = useSearchParams();
-    const categoryId = searchParams.get('category');
-    const pageSize = 12;
-
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [categoryId]);
-
-    useEffect(() => {
-        const load = async () => {
-            setIsLoading(true);
-            try {
-                const params = {
-                    page: currentPage,
-                    limit: pageSize,
-                };
-                if (categoryId && categoryId !== 'all') {
-                    params.categoryId = categoryId;
-                }
-
-                const [pubData, catData] = await Promise.all([
-                    publications.getAll(params),
-                    categoriesService.getTree(),
-                ]);
-
-                setPubs(pubData);
-                setCategories(catData);
-            } catch (err) {
-                console.error("Error loading gallery:", err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        load();
-    }, [categoryId, currentPage]);
+    const [inputValue, setInputValue] = useState(searchQuery);
 
     useEffect(() => {
         if (!socket) return;
+        socket.on('publication:approved', reload);
+        return () => socket.off('publication:approved', reload);
+    }, [socket, reload]);
 
-        const handlePublicationApproved = async () => {
-            try {
-                const params = { page: currentPage, limit: pageSize };
-                if (categoryId && categoryId !== 'all') params.categoryId = categoryId;
-                const pubData = await publications.getAll(params);
-                setPubs(pubData);
-            } catch (err) {
-                console.error('Error reloading publications:', err);
-            }
-        };
 
-        socket.on('publication:approved', handlePublicationApproved);
+    useEffect(() => {
+        setInputValue(searchQuery);
+    }, [searchQuery]);
 
-        return () => {
-            socket.off('publication:approved', handlePublicationApproved);
-        };
-    }, [socket, currentPage, categoryId]);
+
+    const handleSearchChange = (e) => {
+        setInputValue(e.target.value);
+        setSearch(e.target.value);
+    };
+
 
     const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
+        setPage(newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -88,9 +56,16 @@ function GalleryPage() {
                             <img src="./src/assets/icons/filter.svg" alt="Filter icon" className="filter-icon-img" />
                         </button>
                         <div className="search-input-wrapper">
-                            <input id="button" type="text" placeholder="SEARCH" className="search-input" />
+                            <input
+                                id="button"
+                                type="text"
+                                placeholder="SEARCH"
+                                className="search-input"
+                                value={inputValue}
+                                onChange={handleSearchChange}
+                            />
                             <button className="search-submit">
-                                <img src="./src/assets/icons/search.svg" alt="Search icon" className="search-icon-img" />
+                                <img src="./src/assets/icons/search.svg" alt="Search" className="search-icon-img" />
                             </button>
                         </div>
                     </div>
