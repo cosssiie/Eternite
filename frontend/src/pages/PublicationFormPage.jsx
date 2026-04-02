@@ -172,7 +172,7 @@ function PublicationFormPage() {
 
     return (
         <div className="create-page-container">
-            <TitleHeader title={isEditing ? "Edit Publication" : "Create"} />
+            <TitleHeader title={isEditing ? "Edit" : "Create"} />
             <div className="create-container">
 
                 <div className="create-left">

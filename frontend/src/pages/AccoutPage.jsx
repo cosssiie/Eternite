@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import TitleHeader from "../components/TitleHeader";
 import PublicationList from "../components/PublicationList";
 import ProfileSettings from "../components/ProfileSettings";
-import { publications } from "../api/Publication";
+import { publications } from "../api/publication";
 import { users } from "../api/user";
 import { useFavourites } from '../context/FavouritesContext';
 
