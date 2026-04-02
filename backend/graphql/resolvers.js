@@ -104,6 +104,23 @@ module.exports = {
             return true;
         },
 
+        deletePublication: async (_, { id }, { user }) => {
+            requireAuth(user);
+            const pub = await Publication.findById(id);
+            if (!pub) {
+                throw new GraphQLError('Publication not found', {
+                    extensions: { code: 'NOT_FOUND' }
+                });
+            }
+            if (pub.author.toString() !== user.id && user.role !== 'admin') {
+                throw new GraphQLError('You can only delete your own publications', {
+                    extensions: { code: 'FORBIDDEN' }
+                });
+            }
+            await Publication.findByIdAndDelete(id);
+            return id;
+        },
+
         deleteUser: async (_, { id }, { user }) => {
             requireAdmin(user);
             await userService.remove(id);

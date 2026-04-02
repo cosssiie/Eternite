@@ -83,6 +83,7 @@ module.exports = gql`
         login(email: String!, password: String!): AuthPayload
         updateProfile(name: String, email: String, currentPassword: String, newPassword: String): User
         deleteMe: Boolean
+        deletePublication(id: ID!): ID
         toggleFavourite(publicationId: ID!): Boolean
         createCategory(name: String!, parentId: ID): Category
         updateCategory(id: ID!, name: String, parentId: ID): Category
