@@ -13,10 +13,11 @@ function AccountPage() {
     const activeTab = searchParams.get("tab") || "My archive";
 
     const [myPublications, setMyPublications] = useState([]);
+    const [pendingPublications, setPendingPublications] = useState([]);
     const [favPublications, setFavPublications] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const categories = ["My archive", "Favorites", "Settings"];
+    const categories = ["My archive", "Pending", "Favorites", "Settings"];
     const navigate = useNavigate();
 
     const handleTabChange = (tabName) => {
@@ -29,7 +30,12 @@ function AccountPage() {
             try {
                 if (activeTab === "My archive") {
                     const data = await publications.getMyPublications();
-                    setMyPublications(data);
+                    setMyPublications(data.filter(p => p.status === 'approved'));
+                } else if (activeTab === "Pending") {
+                    const data = await publications.getMyPublications();
+                    setPendingPublications(data.filter(p =>
+                        p.status === 'pending'
+                    ));
                 } else if (activeTab === "Favorites") {
                     const data = await users.getFavourites();
                     setFavPublications(data);
@@ -77,7 +83,13 @@ function AccountPage() {
                             </>
                         )
                     )}
-
+                    {activeTab === "Pending" && (
+                        loading ? (
+                            <p className="main-loader" id="button">Loading favorites...</p>
+                        ) : (
+                            <PublicationList publications={pendingPublications} />
+                        )
+                    )}
                     {activeTab === "Favorites" && (
                         loading ? (
                             <p className="main-loader" id="button">Loading favorites...</p>
@@ -89,7 +101,6 @@ function AccountPage() {
                             />
                         )
                     )}
-
                     {activeTab === "Settings" && (
                         loading ? (
                             <p className="main-loader" id="button">Profile settings will be here soon...</p>
