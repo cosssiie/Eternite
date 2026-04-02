@@ -34,6 +34,9 @@ const getOne = async (req, res, next) => {
 const create = async (req, res, next) => {
     try {
         const category = await categoryService.create(req.body);
+
+        const io = req.app.get('io');
+        io.emit('categories:updated');
         res.status(201).json({ success: true, category });
     } catch (err) {
         next(err);
@@ -44,6 +47,9 @@ const create = async (req, res, next) => {
 const update = async (req, res, next) => {
     try {
         const category = await categoryService.update(req.params.id, req.body);
+
+        const io = req.app.get('io');
+        io.emit('categories:updated');
         res.json({ success: true, category });
     } catch (err) {
         next(err);
@@ -54,6 +60,9 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
     try {
         await categoryService.remove(req.params.id);
+
+        const io = req.app.get('io');
+        io.emit('categories:updated');
         res.json({ success: true, message: 'Категорію видалено' });
     } catch (err) {
         next(err);

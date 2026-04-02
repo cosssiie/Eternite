@@ -108,6 +108,10 @@ const remove = async (req, res, next) => {
 const approve = async (req, res, next) => {
     try {
         const publication = await publicationService.approve(req.params.id);
+
+        const io = req.app.get('io');
+        io.emit('publication:approved', { id: req.params.id });
+
         res.json({ success: true, publication });
     } catch (err) {
         next(err);
@@ -118,9 +122,12 @@ const approve = async (req, res, next) => {
 const reject = async (req, res, next) => {
     try {
         const publication = await publicationService.reject(
-            req.params.id,
-            req.body.comment
+            req.params.id, req.body.comment
         );
+
+        const io = req.app.get('io');
+        io.emit('publication:rejected', { id: req.params.id });
+
         res.json({ success: true, publication });
     } catch (err) {
         next(err);

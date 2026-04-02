@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useSocket } from '../context/SocketContext';
 import TitleHeader from '../components/TitleHeader.jsx';
 import PublicationList from '../components/PublicationList.jsx';
 import Pagination from '../components/Pagination.jsx';
@@ -7,6 +8,8 @@ import { publications } from '../api/Publication';
 import { categoriesService } from '../api/categories';
 
 function GalleryPage() {
+    const socket = useSocket();
+
     const [pubs, setPubs] = useState([]);
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +51,27 @@ function GalleryPage() {
         };
         load();
     }, [categoryId, currentPage]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handlePublicationApproved = async () => {
+            try {
+                const params = { page: currentPage, limit: pageSize };
+                if (categoryId && categoryId !== 'all') params.categoryId = categoryId;
+                const pubData = await publications.getAll(params);
+                setPubs(pubData);
+            } catch (err) {
+                console.error('Error reloading publications:', err);
+            }
+        };
+
+        socket.on('publication:approved', handlePublicationApproved);
+
+        return () => {
+            socket.off('publication:approved', handlePublicationApproved);
+        };
+    }, [socket, currentPage, categoryId]);
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);

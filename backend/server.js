@@ -24,10 +24,10 @@ const startServer = async () => {
       methods: ["GET", "POST"]
     }
   });
-  app.set('socketio', io);
+  app.set('io', io);
 
   io.on('connection', (socket) => {
-    console.log('🔌 User connected to Socket.io:', socket.id);
+    console.log('User connected to Socket.io:', socket.id);
     socket.on('disconnect', () => console.log('User disconnected'));
   });
 
@@ -40,7 +40,10 @@ const startServer = async () => {
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
   app.use('/graphql', expressMiddleware(apollo, {
-    context: async ({ req }) => context({ req })
+    context: async ({ req }) => ({
+      ...context({ req }),
+      io: app.get('io')
+    })
   }));
 
   app.use('/api/users', require('./routes/userRoutes'));

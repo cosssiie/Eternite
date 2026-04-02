@@ -134,25 +134,39 @@ module.exports = {
             return userService.toggleActive(id);
         },
 
-        createCategory: async (_, { name, parentId }, { user }) => {
+        rejectPublication: async (_, { id, reason }, { user, io }) => {
             requireAdmin(user);
-            return categoryService.create({ name, parent: parentId });
+            const result = await publicationService.reject(id, reason);
+            io?.emit('publication:rejected', { id });
+            return result;
         },
 
-        updateCategory: async (_, { id, name, parentId }, { user }) => {
+        createCategory: async (_, { name, parentId }, { user, io }) => {
             requireAdmin(user);
-            return categoryService.update(id, { name, parent: parentId });
+            const result = await categoryService.create({ name, parent: parentId });
+            io?.emit('categories:updated');
+            return result;
         },
 
-        deleteCategory: async (_, { id }, { user }) => {
+        updateCategory: async (_, { id, name, parentId }, { user, io }) => {
+            requireAdmin(user);
+            const result = await categoryService.update(id, { name, parent: parentId });
+            io?.emit('categories:updated');
+            return result;
+        },
+
+        deleteCategory: async (_, { id }, { user, io }) => {
             requireAdmin(user);
             await categoryService.remove(id);
+            io?.emit('categories:updated');
             return true;
         },
 
-        toggleCategoryActive: async (_, { id }, { user }) => {
+        toggleCategoryActive: async (_, { id }, { user, io }) => {
             requireAdmin(user);
-            return categoryService.toggleActive(id);
+            const result = await categoryService.toggleActive(id);
+            io?.emit('categories:updated');
+            return result;
         },
 
         saveCategoryTemplate: async (_, { categoryId, fields }, { user }) => {
@@ -160,9 +174,11 @@ module.exports = {
             return categoryService.saveTemplate(categoryId, fields);
         },
 
-        approvePublication: async (_, { id }, { user }) => {
+        approvePublication: async (_, { id }, { user, io }) => {
             requireAdmin(user);
-            return publicationService.approve(id);
+            const result = await publicationService.approve(id);
+            io?.emit('publication:approved', { id });
+            return result;
         },
 
         rejectPublication: async (_, { id, reason }, { user }) => {

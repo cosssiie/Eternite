@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useSocket } from '../context/SocketContext';
 import ReactDOM from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { categoriesService } from "../api/categories";
 import { useAuth } from "../context/AuthContext";
 
 function Menu({ isOpen, onClose }) {
+    const socket = useSocket();
+
     const navigate = useNavigate();
     const { user } = useAuth();
 
@@ -30,6 +33,27 @@ function Menu({ isOpen, onClose }) {
             setTimeout(() => setView("main"), 300);
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleCategoriesUpdated = async () => {
+            try {
+                const data = await categoriesService.getTree();
+                setCategories(data || []);
+                console.log('Categories updated via socket');
+            } catch (err) {
+                console.error('Error reloading categories:', err);
+            }
+        };
+
+        socket.on('categories:updated', handleCategoriesUpdated);
+        console.log('Socket subscribed to categories:updated');
+
+        return () => {
+            socket.off('categories:updated', handleCategoriesUpdated);
+        };
+    }, [socket]);
 
     const handleCategoryClick = (id) => {
         navigate(`/gallery?category=${id}`);
