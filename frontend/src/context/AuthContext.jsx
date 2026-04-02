@@ -17,8 +17,12 @@ export const AuthProvider = ({ children }) => {
                 try {
                     const { data } = await api.get('/users/me');
                     const userData = data.user || data;
-                    setUser(userData);
-                    localStorage.setItem('user', JSON.stringify(userData));
+                    const normalized = {
+                        ...userData,
+                        id: userData.id || userData._id?.toString(),
+                    };
+                    setUser(normalized);
+                    localStorage.setItem('user', JSON.stringify(normalized));
                 } catch (err) {
                     logout();
                 }
@@ -29,9 +33,13 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData, token) => {
+        const normalized = {
+            ...userData,
+            id: userData.id || userData._id?.toString(),
+        };
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(normalized));
+        setUser(normalized);
     };
 
     const logout = () => {
@@ -76,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             user, login, logout, isAuth: !!user, loading, refreshUser,
-            updateFavouritesLocally // передаем функцию в контекст
+            updateFavouritesLocally
         }}>
             {children}
         </AuthContext.Provider>

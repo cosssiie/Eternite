@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { useFavourites } from '../context/FavouritesContext';
-import { publications } from '../api/Publication';
-import { users } from '../api/user';
+import { publications } from '../api/publication';
 
 function PublicationPage() {
     const { id } = useParams();
-    const { isAuth } = useAuth();
+    const { user, isAuth } = useAuth();
     const navigate = useNavigate();
     const { favouriteIds, toggleFavourite: toggleFavInContext } = useFavourites();
 
@@ -27,9 +26,8 @@ function PublicationPage() {
                 setLoading(true);
                 const data = await publications.getById(id);
                 setPublication(data);
-                console.log('setPublication(data)', data);
             } catch (err) {
-                console.error("Ошибка при загрузке публикации", err);
+                console.error("Error loading publication", err);
             } finally {
                 setLoading(false);
             }
@@ -69,12 +67,12 @@ function PublicationPage() {
             setShowToast(true);
             setTimeout(() => {
                 navigate(-1);
-            }, 1000);
+            }, 500);
         } catch (err) {
             console.error("Error deleting publication:", err);
             setToastMessage('Failed to delete publication');
             setShowToast(true);
-            setTimeout(() => setShowToast(false), 2500);
+            setTimeout(() => setShowToast(false), 1500);
         }
     };
 
@@ -107,9 +105,13 @@ function PublicationPage() {
         );
     }
 
-    const { title, images = [], author, description, category, createdAt, attributes } = publication;
+    const { title, images = [], author, description, category, content, createdAt, attributes } = publication;
     const authorName = author?.name || (typeof author === 'string' ? author : 'Unknown');
     const categoryName = category?.name || (typeof category === 'string' ? category : null);
+
+    const authorId = author?.id || author?._id?.toString() || String(author || '');
+    const userId = user?.id || user?._id?.toString() || '';
+    const isOwner = isAuth && !!userId && userId === authorId;
 
     const nextImage = () => setCurrentImageIndex((p) => (p + 1) % images.length);
     const prevImage = () => setCurrentImageIndex((p) => (p - 1 + images.length) % images.length);
@@ -187,18 +189,17 @@ function PublicationPage() {
                                     alt="favourite"
                                 />
                             </button>
-
-                            <button type="button" className="edit-btn-inline">
-                                <img src="/src/assets/icons/edit.svg" alt="edit" />
-                            </button>
-
-                            <button
-                                type="button"
-                                className="delete-btn-inline"
-                                onClick={handleDelete}
-                            >
-                                <img src="/src/assets/icons/delete.svg" alt="delete" />
-                            </button>
+                            {isOwner && (
+                                <>
+                                    <button type="button" className="edit-btn-inline"
+                                        onClick={() => navigate(`/publication/edit/${id}`)}>
+                                        <img src="/src/assets/icons/edit.svg" alt="edit" />
+                                    </button>
+                                    <button type="button" className="delete-btn-inline" onClick={handleDelete}>
+                                        <img src="/src/assets/icons/delete.svg" alt="delete" />
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -216,6 +217,12 @@ function PublicationPage() {
                                     <span className="attribute-value">{attr.value}</span>
                                 </div>
                             ))}
+                        </div>
+                    )}
+
+                    {content && (
+                        <div className="detail-description">
+                            <p id="text">{content}</p>
                         </div>
                     )}
                 </div>

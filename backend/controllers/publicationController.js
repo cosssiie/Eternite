@@ -55,16 +55,32 @@ const create = async (req, res, next) => {
 // оновити публікацію
 const update = async (req, res, next) => {
     try {
-        let updateData = { ...req.body };
+        const existing = await publicationService.getById(req.params.id);
+        const isOwner = String(existing.author._id || existing.author) === String(req.user.id);
+        const isAdmin = req.user.role === 'admin';
 
-        if (req.files && req.files.length > 0) {
-            updateData.images = req.files.map(file => file.path);
-        } else if (req.file) {
-            updateData.images = [req.file.path];
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ message: 'Forbidden' });
         }
 
-        const publication = await publicationService.update(req.params.id, updateData);
-        res.json({ success: true, publication });
+        let updateData = { ...req.body };
+
+        let existingImages = [];
+        if (req.body.existingImages) {
+            existingImages = JSON.parse(req.body.existingImages);
+        }
+
+        let newImages = [];
+        if (req.files?.length > 0) {
+            newImages = req.files.map(file => file.path);
+        } else if (req.file) {
+            newImages = [req.file.path];
+        }
+
+        updateData.images = [...existingImages, ...newImages];
+
+        const updated = await publicationService.update(req.params.id, updateData);
+        res.json({ success: true, publication: updated });
     } catch (err) {
         next(err);
     }
@@ -73,8 +89,16 @@ const update = async (req, res, next) => {
 // видалити публікацію
 const remove = async (req, res, next) => {
     try {
+        const publication = await publicationService.getById(req.params.id);
+        const isOwner = String(publication.author._id || publication.author) === String(req.user.id);
+        const isAdmin = req.user.role === 'admin';
+
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
         await publicationService.remove(req.params.id);
-        res.json({ success: true, message: 'Публікацію видалено' });
+        res.json({ success: true, message: 'Publication was deleted' });
     } catch (err) {
         next(err);
     }

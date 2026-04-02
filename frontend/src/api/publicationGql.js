@@ -4,7 +4,7 @@ export const publicationGql = {
     getAll: (status, categoryId) => gqlRequest(`
         query GetPublications($status: String, $categoryId: ID) {
             publications(status: $status, categoryId: $categoryId) {
-                id title description images status 
+                id title description images status content
                 createdAt
                 author { id name }
                 category { id name }
@@ -39,6 +39,8 @@ export const publicationGql = {
             myPublications {
             id
             title
+            description
+            content
             images
             status
             author { name }

@@ -13,11 +13,11 @@ import AccountPage from "./pages/AccoutPage";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import VerifyEmail from "./components/VerifyEmail";
 import PublicationPage from "./pages/PublicationPage";
-import CreatePublicationPage from './pages/CreatePublicationPage';
+import PublicationFormPage from './pages/PublicationFormPage';
 
 
 function App() {
-  const { user, isAuth, loading } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const isMainPage = location.pathname === "/";
 
@@ -70,10 +70,16 @@ function App() {
                 path="/publication/create"
                 element={
                   <ProtectedRoute>
-                    <CreatePublicationPage />
+                    <PublicationFormPage />
                   </ProtectedRoute>
                 } />
-
+              <Route
+                path="/publication/edit/:id"
+                element={
+                  <ProtectedRoute>
+                    <PublicationFormPage />
+                  </ProtectedRoute>
+                } />
               <Route
                 path="/account"
                 element={

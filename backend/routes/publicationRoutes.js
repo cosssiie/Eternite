@@ -10,8 +10,8 @@ router.get('/:id', publicationController.getOne);
 
 // авторизований користувач
 router.get('/my/publications', auth, publicationController.getMy);
-router.post('/', auth, upload.single('image'), publicationController.create);
-router.put('/:id', auth, upload.single('image'), publicationController.update);
+router.post('/', auth, upload.array('images', 10), publicationController.create);
+router.put('/:id', auth, upload.array('images', 10), publicationController.update);
 router.delete('/:id', auth, publicationController.remove);
 
 // адмін
