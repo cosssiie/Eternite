@@ -5,7 +5,7 @@ import { publicationGql } from './publicationGql';
 const rest = {
     getAll: async (params) => {
         const { data } = await publicationApi.getAll(params);
-        return data.publications || [];
+        return { items: data.publications || [], total: data.total || 0 };
     },
     getById: async (id) => {
         const { data } = await publicationApi.getById(id);
@@ -30,9 +30,14 @@ const graphql = {
             params?.categoryId,
             params?.page || 1,
             params?.limit || 12,
-            params?.search || undefined
-        );
-        return data.publications || [];
+            params?.search || undefined,
+            params?.attrs || undefined
+        );        
+
+        return {
+            items: data.publications?.items || data.publications || [],
+            total: data.publications?.total || 0
+        };
     },
     getById: async (id) => {
         const data = await publicationGql.getById(id);

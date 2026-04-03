@@ -3,13 +3,17 @@ const publicationService = require('../services/publicationService');
 // всі публікації
 const getAll = async (req, res, next) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 5;
+        const { page, limit, status, search, categoryId, category, attrs } = req.query;
+
         const result = await publicationService.getAll({
-            ...req.query,
-            page,
-            limit
+            status,
+            search,
+            category: categoryId || category,
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 12,
+            attrs,
         });
+
         res.json({
             success: true,
             publications: result.publications,

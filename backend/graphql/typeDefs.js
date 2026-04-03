@@ -23,6 +23,11 @@ module.exports = gql`
         attributes: [Attribute]
     }
 
+    type PublicationPage {
+        items: [Publication]
+        total: Int
+    }
+
     type Category {
         id: ID!
         name: String
@@ -65,7 +70,7 @@ module.exports = gql`
 
     type Query {
         me: User
-        publications(status: String, categoryId: ID, page: Int, limit: Int, search: String): [Publication]
+        publications(status: String, categoryId: ID, page: Int, limit: Int, search: String, attrs: String): PublicationPage
         publication(id: ID!): Publication
         myPublications: [Publication]
         favourites: [Publication]

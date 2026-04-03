@@ -26,17 +26,23 @@ module.exports = {
             return userService.getById(user.id);
         },
 
-        publications: async (_, { status, categoryId, page = 1, limit = 12, search }) => {
+        publications: async (_, { status, categoryId, page = 1, limit = 12, search, attrs }) => {
             const filters = {};
             if (status) filters.status = status;
             if (categoryId && categoryId !== 'undefined' && categoryId !== 'all') {
                 filters.category = categoryId;
             }
             if (search) filters.search = search;
+            if (attrs) filters.attrs = attrs;
             filters.page = page;
             filters.limit = limit;
+
             const result = await publicationService.getAll(filters);
-            return result.publications || result;
+
+            return {
+                items: result.publications || [],
+                total: result.total || 0
+            };
         },
 
         publication: async (_, { id }) => {

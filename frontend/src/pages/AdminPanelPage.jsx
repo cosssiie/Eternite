@@ -47,7 +47,7 @@ function AdminPublications() {
         setLoading(true);
         try {
             const data = await publications.getAll({ status: 'pending' });
-            setPubs(data);
+            setPubs(data.items || data || []);
         } catch (err) {
             console.error(err);
         } finally {

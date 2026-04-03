@@ -12,13 +12,14 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const getAll = async ({ status, category, search, page, limit } = {}) => {
+const getAll = async ({ status, category, search, page, limit, attrs } = {}) => {
     return await publicationRepository.findWithFilters({
         status: status || 'approved',
         category: category && category !== 'undefined' ? category : undefined,
         search,
         page: parseInt(page) || 1,
-        limit: parseInt(limit) || 5,
+        limit: parseInt(limit) || 12,
+        attrs,
     });
 };
 
